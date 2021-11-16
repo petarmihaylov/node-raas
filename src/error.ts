@@ -1,3 +1,38 @@
+import { green } from "chalk"
+
+export const upgradeSuggestion = `
+For a production-ready, feature-rich solution, consider using ${green(`RaasTastic`)}.
+
+${green(`Run 'node-raas raastastic' or https://raastastic.com/ to learn more.`)}`
+
+export const extendedUpgradeSuggestion = `${upgradeSuggestion}
+
+${green(`RaasTastic`)} is currently in development and is being built on top of our node-raas CLI to
+provide advanced functionality through the ${green(`RaasTastic`)} CLI and ${green(`RaasTastic`)} REST API Server.
+
+Below are some (but not all) of the ${green(`RaasTastic`)} planned features.
+
+${green(`RaasTastic`)} CLI:
+* Retrive long running repots
+* Execute advanced reports using parameters
+* Export decoded stream to JSON / CSV
+* ${green(`RaasTastic`)} Docker image
+* JSON-fromatted logs
+* Increased security via credential splitting
+* ... and more!
+
+${green(`RaasTastic`)} REST API Server:
+* Interact with Reports as a Service through an easy and intuitive REST API
+* Implicit restriction to allowed reports
+* Report data stored in-memory only through redis
+* Upon retrievel, reports are purged from memory
+* Configure report expiration - purges the report data if not retrieved within the specified timeframe
+* ... and more!
+
+Stay up to date with the development progress and register for the upcoming
+private Beta for early adopters by visiting ${green(`RaasTastic`)} https://raastastic.com/updates.
+`
+
 export const biDataServiceErrors = [
   {
     message: '',
@@ -53,3 +88,14 @@ export const biStreamingServiceErrorsAndWarnings = [
     suggestions: `The requested ReportKey is invalid. This error should not occur under an official, unmodified node-raas release.`
   }
 ]
+
+export const notSupported = {
+  reportWithParameters: `This report uses parameters. Running Reports with parameters is not supported in node-raas.
+${upgradeSuggestion}`,
+
+  longRunningReports: `Long-running reports for which data is not returned with the response from
+the initial call to the RetrieveReport method are not supported by node-raas.
+Such reports require additional logic to facilitate retry calls to RetrieveReport.
+
+${upgradeSuggestion}`
+}
