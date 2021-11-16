@@ -1,0 +1,67 @@
+{
+  "name": "node-raas",
+  "description": "A tiny library and CLI for interacting with the Reports as a Service (RAAS) API from UKG (Ultimate Kronos Group). NOTE: node-raas is NOT published. UKG does NOT provide support for node-raas.",
+  "version": "0.0.0",
+  "author": "Petar Mihaylov @petarmihaylov",
+  "bin": {
+    "node-raas": "./bin/run"
+  },
+  "bugs": "https://github.com/petarmihaylov/node-raas/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "@types/uuid": "^8.3.1",
+    "chalk": "^4.1.2",
+    "soap": "^0.43.0",
+    "tslib": "^1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "globby": "^10",
+    "mocha": "^5",
+    "nyc": "^14",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/petarmihaylov/node-raas",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "node-raas",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "petarmihaylov/node-raas",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
