@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { biStreamingServiceErrorsAndWarnings as biStreamingServiceErrors, Clients, executeReport, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
+import { biStreamingServiceErrorsAndWarnings as biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
 import { config, login, RaasExecuteReportCallResult, RaasLogOffCallResult, RaasLogOnCallResult } from '../core-raas';
 import { biDataServiceErrors } from '../error';
 import { yellow, blue, magenta, green, red } from 'chalk';
@@ -14,6 +14,7 @@ export default class Pull extends Command {
   ]
 
   static flags = {
+    // flag with no value (-h, --help)
     help: flags.help({char: 'h'}),
     // flag with a value (-u, --username="VALUE")
     username: flags.string({char: 'u', required: true, description: 'Username of user or service account. User is required for pulling UKG Time Management data.'}),
@@ -52,7 +53,7 @@ export default class Pull extends Command {
   }
 
   // Used for LogOn and ExecuteReport errors
-  handleErrors(obj: any, errorNode: string, verbose:boolean): void {
+  handleBiDataServiceErrors(obj: any, errorNode: string, verbose:boolean): void {
     let identifiedError: { message: string, suggestions: string}[] = []
 
     const action = errorNode.slice(0, -6);
@@ -82,7 +83,7 @@ ${yellow(identifiedError[0].suggestions)}`)
     }
   }
 
-  handleRetrieveReportErrors(obj: RaasRetrieveReportCallResult, verbose:boolean): void {
+  handleBiStreamingServiceErrors(obj: RaasRetrieveReportCallResult, verbose:boolean): void {
     let identifiedError: { message: string, suggestions: string}[] = []
 
     try {
@@ -140,58 +141,89 @@ ${yellow(identifiedError[0].suggestions)}`)
     const startTimeLogOn = Date.now();
     const logOnResult: RaasLogOnCallResult = await login(clients, raasCredential);
     if (logOnResult.hasErrors) {
-      this.handleErrors(logOnResult, 'LogOnResult', flags.verbose);
+      this.handleBiDataServiceErrors(logOnResult, 'LogOnResult', flags.verbose);
     }
     const msElapsedLogOn = Date.now() - startTimeLogOn;
     // this.log(`${blue(`LogOn:`)} ${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)}`)
     cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedLogOn / 1000}s`)}`)
     // Login - End
 
+    // GetReportParameters - Start
+    cli.action.start(blue('GetReportParameters'));
+    const startTimerGetReportParameters = Date.now();
+    const getReportParametersResult: any = await getReportParameters(clients, logOnResult.result[0].LogOnResult, reportPath )
+    // this.log(JSON.stringify(getReportParametersResult, undefined, 2));
+
+    // In the case of an error
+    if (getReportParametersResult.hasErrors) { this.handleBiDataServiceErrors(getReportParametersResult, 'GetReportParametersResult', flags.verbose);}
+
+    if (getReportParametersResult.hasWarnings) {
+      if (!flags.verbose) {
+        this.error(`${blue(`GetReportParameters:`)} ${red(`Warn`)}
+        Troubleshooting suggestions:
+        ${yellow(getReportParametersResult.warningMessage)}`);
+      } else {
+        this.error(`${blue(`GetReportParameters:`)} ${red(`Warn`)}
+${blue(`US-CORRELATION-ID:`)} ${magenta(getReportParametersResult.correlationId)}
+${blue(`GetReportParametersResult:`)} ${red(JSON.stringify(getReportParametersResult.result[0].GetReportParametersResult, undefined, 2))}
+${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(getReportParametersResult.result[2], undefined, 2))}
+${blue(`Raw XML Request:`)} ${red(JSON.stringify(getReportParametersResult.result[3], undefined, 2))}
+${blue(`Raw XML Response:`)} ${red(JSON.stringify(getReportParametersResult.result[1], undefined, 2))}
+Troubleshooting suggestions:
+${yellow(getReportParametersResult.warningMessage)}`)
+      }
+    }
+
+
+    const msElapsedGetReportParameters = Date.now() - startTimerGetReportParameters;
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
+    // GetReportParameters - End
+
     // Execute Report - Start
     cli.action.start(blue('ExecuteReport'))
     const startTimeExecuteReport = Date.now();
     const executeReportResult: RaasExecuteReportCallResult = await executeReport(clients, logOnResult.result[0].LogOnResult, reportPath);
     if (executeReportResult.hasErrors) {
-      this.handleErrors(executeReportResult, 'ExecuteReportResult', flags.verbose);
+      this.handleBiDataServiceErrors(executeReportResult, 'ExecuteReportResult', flags.verbose);
     }
     const msElapsedExecuteReport = Date.now() - startTimeExecuteReport;
     cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedExecuteReport / 1000}s`)}`)
     // Execute Report - End
 
-//     // Retrieve Report - Start
-//     cli.action.start(blue('RetrieveReport'));
-//     const startTimeRetrieveReport = Date.now();
-//     const retrieveReportResult:RaasRetrieveReportCallResult = await retrieveReport(clients, executeReportResult.result[0].ExecuteReportResult)
-//     const msElapsedRetrieveReport = Date.now() - startTimeRetrieveReport;
-//     // In the case of an error
-//     if (retrieveReportResult.hasErrors) { this.handleRetrieveReportErrors(retrieveReportResult, flags.verbose);}
+    // Retrieve Report - Start
+    cli.action.start(blue('RetrieveReport'));
+    const startTimeRetrieveReport = Date.now();
+    const retrieveReportResult:RaasRetrieveReportCallResult = await retrieveReport(clients, executeReportResult.result[0].ExecuteReportResult)
+    const msElapsedRetrieveReport = Date.now() - startTimeRetrieveReport;
+    // In the case of an error
+    if (retrieveReportResult.hasErrors) { this.handleBiStreamingServiceErrors(retrieveReportResult, flags.verbose);}
 
-//     // When Status === 'Working'
-//     if (retrieveReportResult.hasWarnings) {
-//       if (!flags.verbose) {
-//         this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
-//         Troubleshooting suggestions:
-//         ${yellow(retrieveReportResult.warningMessage)}`);
-//       } else {
-//         this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
-// ${blue(`US-CORRELATION-ID:`)} ${magenta(retrieveReportResult.correlationId)}
-// ${blue(`ReportStream:`)} ${red(JSON.stringify(retrieveReportResult.result[0].ReportStream, undefined, 2))}
-// ${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(retrieveReportResult.result[2], undefined, 2))}
-// ${blue(`Raw XML Request:`)} ${red(JSON.stringify(retrieveReportResult.result[3], undefined, 2))}
-// ${blue(`Raw XML Response:`)} ${red(JSON.stringify(retrieveReportResult.result[1], undefined, 2))}
-// Troubleshooting suggestions:
-// ${yellow(retrieveReportResult.warningMessage)}`)
-//       }
-//     }
-//     cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedRetrieveReport / 1000}s`)}`)
-//     // Retrieve Report - End
+    // When Status === 'Working'
+    if (retrieveReportResult.hasWarnings) {
+      if (!flags.verbose) {
+        this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
+        Troubleshooting suggestions:
+        ${yellow(retrieveReportResult.warningMessage)}`);
+      } else {
+        this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
+${blue(`US-CORRELATION-ID:`)} ${magenta(retrieveReportResult.correlationId)}
+${blue(`ReportStream:`)} ${red(JSON.stringify(retrieveReportResult.result[0].ReportStream, undefined, 2))}
+${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(retrieveReportResult.result[2], undefined, 2))}
+${blue(`Raw XML Request:`)} ${red(JSON.stringify(retrieveReportResult.result[3], undefined, 2))}
+${blue(`Raw XML Response:`)} ${red(JSON.stringify(retrieveReportResult.result[1], undefined, 2))}
+Troubleshooting suggestions:
+${yellow(retrieveReportResult.warningMessage)}`)
+      }
+    }
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedRetrieveReport / 1000}s`)}`)
+    // Retrieve Report - End
 
     // LogOff - Start
     cli.action.start(blue('LogOff'));
     const startTimeLogOff = Date.now();
     const logOffResult: Promise<RaasLogOffCallResult> = await logOff(clients, logOnResult.result[0].LogOnResult);
     if (logOnResult.hasErrors) {
-      this.handleErrors(logOffResult, 'LogOfResult', flags.verbose);
+      this.handleBiDataServiceErrors(logOffResult, 'LogOfResult', flags.verbose);
     }
     const msElapsedLogOff = Date.now() - startTimeLogOff;
     // this.log(`${blue(`LogOn:`)} ${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)}`)

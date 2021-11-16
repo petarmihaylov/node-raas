@@ -1,5 +1,6 @@
 import * as soap from 'soap'
 import * as uuid from 'uuid'
+import { notSupported } from '.'
 
 export type RaasCredential = {
   UserName: string,
@@ -241,6 +242,76 @@ export async function login(clients: Clients, raasCredential: RaasCredential): P
   }
 }
 
+export async function getReportParameters(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<any> {
+  // This is a required xmlns for RaaS
+  addAddressingHeader(clients.executeClient);
+
+  // This is a required header for RaaS
+  clients.executeClient.clearSoapHeaders();
+  clients.executeClient.addSoapHeader({
+    "a:Action":
+      "http://www.ultipro.com/dataservices/bidata/2/IBIDataService/GetReportParameters",
+  });
+
+  const getReportParametersArgs = {
+    reportPath: reportPathOrId,
+    context: logOnResult,
+  };
+
+  const getReportParametersCorrelationId = uuid.v4();
+  clients.executeClient.addHttpHeader("US-CORRELATION-ID", getReportParametersCorrelationId);
+
+  const getReportParametersRunResult: any = await clients.executeClient
+    .GetReportParametersAsync(getReportParametersArgs)
+    .then((result: any) => {
+      // console.log(result);
+      // console.log(result[0].ExecuteReportResult);
+      // Logon result
+      // return result[0].ExecuteReportResult;
+      return result;
+    })
+    .catch((error: any) => {
+      // console.error(error.root.Envelope.Header.Action);
+      console.error(error.response.status);
+      console.error(error.response.statusText);
+      console.error(error.response.config);
+      console.error(error.body);
+      // console.error(error.rawRequest);
+      // console.error(error.rawResponse);
+    });
+
+  const objToReturn = {
+    correlationId: getReportParametersCorrelationId,
+    result: getReportParametersRunResult,
+  }
+
+  if (
+    getReportParametersRunResult[0].GetReportParametersResult.Status === "Success"
+    && getReportParametersRunResult[0].GetReportParametersResult.ReportParameters === null) {
+    return {
+      hasErrors: false,
+      hasWarnings: false,
+      ...objToReturn
+    }
+  } else if (
+    getReportParametersRunResult[0].GetReportParametersResult.Status === "Success"
+    && getReportParametersRunResult[0].GetReportParametersResult.ReportParameters !== null
+  ) {
+    return {
+      hasErrors: false,
+      hasWarnings: true,
+      warningMessage: notSupported.reportWithParameters,
+      ...objToReturn
+    }
+  } else {
+    return {
+      hasErrors: true,
+      errorMessage: getReportParametersRunResult[0].GetReportParametersResult.StatusMessage,
+      ...objToReturn
+    }
+  }
+}
+
 export async function executeReport(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasExecuteReportCallResult> {
   // This is a required xmlns for RaaS
   addAddressingHeader(clients.executeClient);
@@ -266,7 +337,7 @@ export async function executeReport(clients: Clients, logOnResult: LogOnResultTy
   const executeReportCorrelationId = uuid.v4();
   clients.executeClient.addHttpHeader("US-CORRELATION-ID", executeReportCorrelationId);
 
-  const executeReportResult: ExecuteReportResponse = await clients.executeClient
+  const executeReportRunResult: ExecuteReportResponse = await clients.executeClient
     .ExecuteReportAsync(executeReportArgs)
     .then((result: ExecuteReportResponse) => {
       // console.log(result);
@@ -287,10 +358,10 @@ export async function executeReport(clients: Clients, logOnResult: LogOnResultTy
 
   const objToReturn = {
     correlationId: executeReportCorrelationId,
-    result: executeReportResult,
+    result: executeReportRunResult,
   }
 
-  if (executeReportResult[0].ExecuteReportResult.Status === "Success") {
+  if (executeReportRunResult[0].ExecuteReportResult.Status === "Success") {
     return {
       hasErrors: false,
       ...objToReturn
@@ -344,11 +415,7 @@ export async function retrieveReport(clients: Clients, executeReportResult: Exec
       return {
         hasErrors: false,
         hasWarnings: true,
-        warningMessage: `Long-running reports for which data is not returned with the response from
-the initial call to RetrieveReport method are not supported by node-raas. Such reports require additional logic to
-facilitate retry calls to RetrieveReport.
-
-For an production-ready, feature-rich solution, consider using RaasTastic https://raastastic.com by Studio350.`,
+        warningMessage: notSupported.longRunningReports,
         ...objToReturn
       }
     } else if (retrieveReportRunResult[2].Status === "Failed") {
@@ -377,11 +444,6 @@ export async function logOff(clients: Clients, logOnResult: LogOnResultTypeDefin
 
   const logOffCorrelationId = uuid.v4();
   clients.executeClient.addHttpHeader("US-CORRELATION-ID", logOffCorrelationId);
-
-  // Simulate wrong toke for
-  logOnResult.Token += '111111'
-
-  console.log(logOnResult);
 
   const logOffRunResult: any = await clients.executeClient
       .LogOffAsync({
@@ -420,5 +482,4 @@ export async function logOff(clients: Clients, logOnResult: LogOnResultTypeDefin
         ...objToReturn
       }
     }
-  return logOffRunResult;
 }
