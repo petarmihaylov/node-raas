@@ -161,7 +161,7 @@ ${yellow(retrieveReportResult.warningMessage)}`)
     // LogOff - Start
     cli.action.start(blue('LogOff'));
     const startTimeLogOff = Date.now();
-    const logOffResult: Promise<RaasLogOffCallResult> = await logOff(clients, logOnResult.result[0].LogOnResult);
+    const logOffResult: RaasLogOffCallResult = await logOff(clients, logOnResult.result[0].LogOnResult);
     if (logOnResult.hasErrors) {
       handleBiDataServiceErrors(logOffResult, 'LogOfResult', flags.verbose);
     }
