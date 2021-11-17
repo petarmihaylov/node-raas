@@ -1,9 +1,10 @@
 import {Command, flags} from '@oclif/command'
 import { biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
 import { config, login, RaasExecuteReportCallResult, RaasLogOffCallResult, RaasLogOnCallResult } from '../core-raas';
-import { biDataServiceErrors } from '../error';
+import { biDataServiceErrors, handleBiDataServiceErrors, handleBiStreamingServiceErrors } from '../error';
 import { yellow, blue, magenta, green, red } from 'chalk';
 import cli from 'cli-ux'
+import { blueMagenta } from '../utils/formatters';
 
 export default class Pull extends Command {
   static description = 'Pull data from a BI report through Reports as a Service (RAAS).'
@@ -48,69 +49,6 @@ export default class Pull extends Command {
     },
   ]
 
-  blueMagenta(blueString: string, magentaString: string) {
-    return `${blue(blueString)} ${magenta(magentaString)}`
-  }
-
-  // Used for LogOn and ExecuteReport errors
-  handleBiDataServiceErrors(obj: any, errorNode: string, verbose:boolean): void {
-    let identifiedError: { message: string, suggestions: string}[] = []
-
-    const action = errorNode.slice(0, -6);
-
-    try {
-      identifiedError = biDataServiceErrors.filter(e => {
-        return e.message === obj.result[0][errorNode].StatusMessage
-      })
-    } catch(e) {
-      this.error('Invalid errorNode parameter.');
-    }
-    // If the error is not defined, push the default error
-    if (identifiedError.length === 0) identifiedError.push(biDataServiceErrors[0])
-
-    if (!verbose) {
-      this.error(`\n  ${blue(`${action}:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
-    } else {
-      this.error(`
-${blue(`${action}:`)} ${red(`Failed`)}
-${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
-${blue(`${errorNode}:`)} ${red(JSON.stringify(obj.result[0][errorNode], undefined, 2))}
-${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(obj.result[2], undefined, 2))}
-${blue(`Raw XML Request:`)} ${red(JSON.stringify(obj.result[3], undefined, 2))}
-${blue(`Raw XML Response:`)} ${red(JSON.stringify(obj.result[1], undefined, 2))}
-Troubleshooting suggestions:
-${yellow(identifiedError[0].suggestions)}`)
-    }
-  }
-
-  handleBiStreamingServiceErrors(obj: RaasRetrieveReportCallResult, verbose:boolean): void {
-    let identifiedError: { message: string, suggestions: string}[] = []
-
-    try {
-      identifiedError = biStreamingServiceErrors.filter(e => {
-        return e.message === obj.result[2].StatusMessage
-      })
-    } catch(e) {
-      this.error('Invalid errorNode parameter.');
-    }
-    // If the error is not defined, push the default error
-    if (identifiedError.length === 0) identifiedError.push(biStreamingServiceErrors[0])
-
-    if (!verbose) {
-      this.error(`\n  ${blue(`RetrieveReport:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
-    } else {
-      this.error(`
-${blue(`RetrieveReport:`)} ${red(`Failed`)}
-${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
-${blue(`ReportStream:`)} ${red(JSON.stringify(obj.result[0].ReportStream, undefined, 2))}
-${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(obj.result[2], undefined, 2))}
-${blue(`Raw XML Request:`)} ${red(JSON.stringify(obj.result[3], undefined, 2))}
-${blue(`Raw XML Response:`)} ${red(JSON.stringify(obj.result[1], undefined, 2))}
-Troubleshooting suggestions:
-${yellow(identifiedError[0].suggestions)}`)
-    }
-  }
-
   async run() {
     const {args, flags} = this.parse(Pull)
 
@@ -123,14 +61,14 @@ ${yellow(identifiedError[0].suggestions)}`)
       UserAccessKey: flags.userApiKey
     }
     this.log(blue(`Starting a report pull...`))
-    this.log(this.blueMagenta(`Report Path/ID:`, reportPath))
+    this.log(blueMagenta(`Report Path/ID:`, reportPath))
 
     if (flags.printCreds) {
-      this.log(this.blueMagenta(`Username:`, flags.username))
-      this.log(this.blueMagenta(`Password:`, flags.password));
-      this.log(this.blueMagenta(`Customer API Key:`, flags.customerApiKey));
-      this.log(this.blueMagenta(`User API Key:`, flags.userApiKey));
-      this.log(this.blueMagenta(`Base Endpoint URL:`, flags.baseEndpointUrl));
+      this.log(blueMagenta(`Username:`, flags.username))
+      this.log(blueMagenta(`Password:`, flags.password));
+      this.log(blueMagenta(`Customer API Key:`, flags.customerApiKey));
+      this.log(blueMagenta(`User API Key:`, flags.userApiKey));
+      this.log(blueMagenta(`Base Endpoint URL:`, flags.baseEndpointUrl));
     }
 
     // Set up the SOAP clients
@@ -141,11 +79,11 @@ ${yellow(identifiedError[0].suggestions)}`)
     const startTimeLogOn = Date.now();
     const logOnResult: RaasLogOnCallResult = await login(clients, raasCredential);
     if (logOnResult.hasErrors) {
-      this.handleBiDataServiceErrors(logOnResult, 'LogOnResult', flags.verbose);
+      handleBiDataServiceErrors(logOnResult, 'LogOnResult', flags.verbose);
     }
     const msElapsedLogOn = Date.now() - startTimeLogOn;
     // this.log(`${blue(`LogOn:`)} ${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)}`)
-    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedLogOn / 1000}s`)}`)
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedLogOn / 1000}s`)}`)
     // Login - End
 
     // GetReportParameters - Start
@@ -155,7 +93,7 @@ ${yellow(identifiedError[0].suggestions)}`)
     // this.log(JSON.stringify(getReportParametersResult, undefined, 2));
 
     // In the case of an error
-    if (getReportParametersResult.hasErrors) { this.handleBiDataServiceErrors(getReportParametersResult, 'GetReportParametersResult', flags.verbose);}
+    if (getReportParametersResult.hasErrors) { handleBiDataServiceErrors(getReportParametersResult, 'GetReportParametersResult', flags.verbose);}
 
     if (getReportParametersResult.hasWarnings) {
       if (!flags.verbose) {
@@ -176,7 +114,7 @@ ${yellow(getReportParametersResult.warningMessage)}`)
 
 
     const msElapsedGetReportParameters = Date.now() - startTimerGetReportParameters;
-    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
     // GetReportParameters - End
 
     // Execute Report - Start
@@ -184,10 +122,10 @@ ${yellow(getReportParametersResult.warningMessage)}`)
     const startTimeExecuteReport = Date.now();
     const executeReportResult: RaasExecuteReportCallResult = await executeReport(clients, logOnResult.result[0].LogOnResult, reportPath);
     if (executeReportResult.hasErrors) {
-      this.handleBiDataServiceErrors(executeReportResult, 'ExecuteReportResult', flags.verbose);
+      handleBiDataServiceErrors(executeReportResult, 'ExecuteReportResult', flags.verbose);
     }
     const msElapsedExecuteReport = Date.now() - startTimeExecuteReport;
-    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedExecuteReport / 1000}s`)}`)
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedExecuteReport / 1000}s`)}`)
     // Execute Report - End
 
     // Retrieve Report - Start
@@ -196,7 +134,7 @@ ${yellow(getReportParametersResult.warningMessage)}`)
     const retrieveReportResult:RaasRetrieveReportCallResult = await retrieveReport(clients, executeReportResult.result[0].ExecuteReportResult)
     const msElapsedRetrieveReport = Date.now() - startTimeRetrieveReport;
     // In the case of an error
-    if (retrieveReportResult.hasErrors) { this.handleBiStreamingServiceErrors(retrieveReportResult, flags.verbose);}
+    if (retrieveReportResult.hasErrors) { handleBiStreamingServiceErrors(retrieveReportResult, flags.verbose);}
 
     // When Status === 'Working'
     if (retrieveReportResult.hasWarnings) {
@@ -215,7 +153,7 @@ Troubleshooting suggestions:
 ${yellow(retrieveReportResult.warningMessage)}`)
       }
     }
-    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedRetrieveReport / 1000}s`)}`)
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedRetrieveReport / 1000}s`)}`)
     // Retrieve Report - End
 
     // LogOff - Start
@@ -223,11 +161,11 @@ ${yellow(retrieveReportResult.warningMessage)}`)
     const startTimeLogOff = Date.now();
     const logOffResult: Promise<RaasLogOffCallResult> = await logOff(clients, logOnResult.result[0].LogOnResult);
     if (logOnResult.hasErrors) {
-      this.handleBiDataServiceErrors(logOffResult, 'LogOfResult', flags.verbose);
+      handleBiDataServiceErrors(logOffResult, 'LogOfResult', flags.verbose);
     }
     const msElapsedLogOff = Date.now() - startTimeLogOff;
     // this.log(`${blue(`LogOn:`)} ${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)}`)
-    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${this.blueMagenta(`Took:`, `${msElapsedLogOff / 1000}s`)}`)
+    cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedLogOff / 1000}s`)}`)
     // LogOff - End
   }
 }

@@ -1,9 +1,10 @@
-import { green } from "chalk"
+import { blue, green, magenta, red, yellow } from "chalk"
+import { RaasRetrieveReportCallResult } from "./core-raas"
 
 export const upgradeSuggestion = `
 For a production-ready, feature-rich solution, consider using ${green(`RaasTastic`)}.
 
-${green(`Run 'node-raas raastastic' or https://raastastic.com/ to learn more.`)}`
+Run 'node-raas raastastic' or visit ${green('https://raastastic.com/ to learn more.')}`
 
 export const extendedUpgradeSuggestion = `${upgradeSuggestion}
 
@@ -90,7 +91,7 @@ export const biStreamingServiceErrors = [
 ]
 
 export const notSupported = {
-  reportWithParameters: `This report uses parameters. Running Reports with parameters is not supported in node-raas.
+  reportWithParameters: `This report uses parameters. Running reports with parameters is not supported in node-raas.
 ${upgradeSuggestion}`,
 
   longRunningReports: `Long-running reports for which data is not returned with the response from
@@ -98,4 +99,63 @@ the initial call to the RetrieveReport method are not supported by node-raas.
 Such reports require additional logic to facilitate retry calls to RetrieveReport.
 
 ${upgradeSuggestion}`
+}
+
+// Used for LogOn and ExecuteReport errors
+export function handleBiDataServiceErrors(obj: any, errorNode: string, verbose:boolean): void {
+  let identifiedError: { message: string, suggestions: string}[] = []
+
+  const action = errorNode.slice(0, -6);
+
+  try {
+    identifiedError = biDataServiceErrors.filter(e => {
+      return e.message === obj.result[0][errorNode].StatusMessage
+    })
+  } catch(e) {
+    console.error('Invalid errorNode parameter.');
+  }
+  // If the error is not defined, push the default error
+  if (identifiedError.length === 0) identifiedError.push(biDataServiceErrors[0])
+
+  if (!verbose) {
+    console.error(`\n  ${blue(`${action}:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
+  } else {
+    console.error(`
+${blue(`${action}:`)} ${red(`Failed`)}
+${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
+${blue(`${errorNode}:`)} ${red(JSON.stringify(obj.result[0][errorNode], undefined, 2))}
+${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(obj.result[2], undefined, 2))}
+${blue(`Raw XML Request:`)} ${red(JSON.stringify(obj.result[3], undefined, 2))}
+${blue(`Raw XML Response:`)} ${red(JSON.stringify(obj.result[1], undefined, 2))}
+Troubleshooting suggestions:
+${yellow(identifiedError[0].suggestions)}`)
+  }
+}
+
+export function handleBiStreamingServiceErrors(obj: RaasRetrieveReportCallResult, verbose:boolean): void {
+  let identifiedError: { message: string, suggestions: string}[] = []
+
+  try {
+    identifiedError = biStreamingServiceErrors.filter(e => {
+      return e.message === obj.result[2].StatusMessage
+    })
+  } catch(e) {
+    console.error('Invalid errorNode parameter.');
+  }
+  // If the error is not defined, push the default error
+  if (identifiedError.length === 0) identifiedError.push(biStreamingServiceErrors[0])
+
+  if (!verbose) {
+    console.error(`\n  ${blue(`RetrieveReport:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
+  } else {
+    console.error(`
+${blue(`RetrieveReport:`)} ${red(`Failed`)}
+${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
+${blue(`ReportStream:`)} ${red(JSON.stringify(obj.result[0].ReportStream, undefined, 2))}
+${blue(`SOAP Request Headers:`)} ${red(JSON.stringify(obj.result[2], undefined, 2))}
+${blue(`Raw XML Request:`)} ${red(JSON.stringify(obj.result[3], undefined, 2))}
+${blue(`Raw XML Response:`)} ${red(JSON.stringify(obj.result[1], undefined, 2))}
+Troubleshooting suggestions:
+${yellow(identifiedError[0].suggestions)}`)
+  }
 }
