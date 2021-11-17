@@ -112,15 +112,15 @@ export function handleBiDataServiceErrors(obj: any, errorNode: string, verbose:b
       return e.message === obj.result[0][errorNode].StatusMessage
     })
   } catch(e) {
-    console.error('Invalid errorNode parameter.');
+    throw new Error('Invalid errorNode parameter.');
   }
   // If the error is not defined, push the default error
   if (identifiedError.length === 0) identifiedError.push(biDataServiceErrors[0])
 
   if (!verbose) {
-    console.error(`\n  ${blue(`${action}:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
+    throw new Error(`\n  ${blue(`${action}:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
   } else {
-    console.error(`
+    throw new Error(`
 ${blue(`${action}:`)} ${red(`Failed`)}
 ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
 ${blue(`${errorNode}:`)} ${red(JSON.stringify(obj.result[0][errorNode], undefined, 2))}
@@ -140,15 +140,15 @@ export function handleBiStreamingServiceErrors(obj: RaasRetrieveReportCallResult
       return e.message === obj.result[2].StatusMessage
     })
   } catch(e) {
-    console.error('Invalid errorNode parameter.');
+    throw new Error('Invalid errorNode parameter.');
   }
   // If the error is not defined, push the default error
   if (identifiedError.length === 0) identifiedError.push(biStreamingServiceErrors[0])
 
   if (!verbose) {
-    console.error(`\n  ${blue(`RetrieveReport:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
+    throw new Error(`\n  ${blue(`RetrieveReport:`)} ${red(`Failed`)} \n  ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)} \n  ${red(JSON.stringify(obj.result[0], undefined, 2))} \n Troubleshooting suggestions: ${yellow(identifiedError[0].suggestions)}`)
   } else {
-    console.error(`
+    throw new Error(`
 ${blue(`RetrieveReport:`)} ${red(`Failed`)}
 ${blue(`US-CORRELATION-ID:`)} ${magenta(obj.correlationId)}
 ${blue(`ReportStream:`)} ${red(JSON.stringify(obj.result[0].ReportStream, undefined, 2))}
