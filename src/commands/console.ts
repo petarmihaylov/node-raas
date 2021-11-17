@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { biStreamingServiceErrors, Clients, executeReport, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
+import { biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
 import { config, login, RaasExecuteReportCallResult, RaasLogOffCallResult, RaasLogOnCallResult } from '../core-raas';
 import { biDataServiceErrors } from '../error';
 import { yellow, blue, magenta, green, red } from 'chalk';
@@ -119,8 +119,57 @@ export default class Pull extends Command {
       },
       default: false
     }
-  ])
+    ]);
 
-      this.log(responses);
+    const beginPrompt = [{
+      name: 'action',
+      message: 'What would you like to do?',
+      type: 'rawlist',
+      // Ask for this when the base endpoint was not set via a parameter
+      when: () => {
+        return flags.baseEndpointUrl === undefined;
+      },
+      default: 8,
+      loop: true,
+      choices: [
+        {name: 'GetReportList'},
+        {name: 'GetReportParameters'},
+        {name: 'ExecuteReport'},
+        {name: 'exit'},
+      ]
+    }]
+
+    const getReportPathOrId = [{
+      name: 'reportPathOrId',
+      message: 'What is the Report Path or ID?',
+      type: 'input'
+    }]
+
+    async function repl() {
+      let answer = await inquirer.prompt(beginPrompt);
+      let reportPathOrId = ''
+      let keepLooping = true;
+      switch (answer.action) {
+        case 'GetReportList':
+          console.log(`Getting Report List for: ${answer.reportPathOrId} `)
+          break;
+        case 'GetReportParameters':
+          answer = await inquirer.prompt(getReportPathOrId);
+          reportPathOrId = answer.reportPathOrId;
+          console.log(`Getting Parameters for: ${answer.reportPathOrId} `)
+          break;
+        case 'ExecuteReport':
+          answer = await inquirer.prompt(getReportPathOrId);
+          reportPathOrId = answer.reportPathOrId;
+          console.log(`Executing Report for: ${answer.reportPathOrId} `)
+          break;
+        case 'exit':
+          keepLooping = false
+          break;
+      }
+      if (keepLooping) repl()
+    }
+
+    repl();
   }
 }
