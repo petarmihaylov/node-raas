@@ -74,7 +74,7 @@ export const biDataServiceErrors = [
   },
 ]
 
-export const biStreamingServiceErrorsAndWarnings = [
+export const biStreamingServiceErrors = [
   {
     message: '',
     suggestions: 'Unhandled error occurred. Please run node-raas with the -v flag and paste the REQUES/RESPONSE combination as an issue at https://github.com/petarmihaylov/node-raas.',

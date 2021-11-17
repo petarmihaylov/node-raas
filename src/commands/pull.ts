@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { biStreamingServiceErrorsAndWarnings as biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
+import { biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
 import { config, login, RaasExecuteReportCallResult, RaasLogOffCallResult, RaasLogOnCallResult } from '../core-raas';
 import { biDataServiceErrors } from '../error';
 import { yellow, blue, magenta, green, red } from 'chalk';
