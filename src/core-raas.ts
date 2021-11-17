@@ -193,23 +193,33 @@ export interface RaasGetReportParametersCallResult {
   result: GetReportParametersResponse
 }
 
+export enum RaasMethods {
+  LogOn = 'LogOn',
+  GetReportParameters = 'GetReportParameters',
+  ExecuteReport = 'ExecuteReport',
+  RetrieveReport = 'RetrieveReport',
+  LogOff = 'LogOff',
+}
+
 export async function config(baseEndpoint: string): Promise<Clients> {
   const url = `https://${baseEndpoint}/services/BIDataService`;
   const executeClient: soap.Client = await soap.createClientAsync(url, {
     forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
     escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
   });
+  executeClient.addHttpHeader("Content-Type", "application/soap+xml");
 
   // ╔═╗┌┬┐┬─┐┌─┐┌─┐┌┬┐┬┌┐┌┌─┐  ╔═╗┬  ┬┌─┐┌┐┌┌┬┐  ╔═╗┌─┐┌┐┌┌─┐┬┌─┐
   // ╚═╗ │ ├┬┘├┤ ├─┤││││││││ ┬  ║  │  │├┤ │││ │   ║  │ ││││├┤ ││ ┬
   // ╚═╝ ┴ ┴└─└─┘┴ ┴┴ ┴┴┘└┘└─┘  ╚═╝┴─┘┴└─┘┘└┘ ┴   ╚═╝└─┘┘└┘└  ┴└─┘
 
   const streaminServiceUrl =
-    "https://Servicet.ultipro.com/services/BIStreamingService";
+    `https://${baseEndpoint}/services/BIStreamingService`;
   const streamClient: soap.Client = await soap.createClientAsync(streaminServiceUrl, {
     forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
     escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
   });
+  streamClient.addHttpHeader("Content-Type", "application/soap+xml");
 
   return {
     executeClient,
@@ -228,16 +238,33 @@ export function addAddressingHeader(soapClient: soap.Client) {
   }
 }
 
+export function addActionHeader(clients: Clients, method: RaasMethods) {
+  switch (method) {
+    case RaasMethods.LogOn:
+    case RaasMethods.GetReportParameters:
+    case RaasMethods.ExecuteReport:
+    case RaasMethods.LogOff:
+      clients.executeClient.clearSoapHeaders();
+      // This is a required header for RaaS
+      clients.executeClient.addSoapHeader({
+        'a:Action':
+          `http://www.ultipro.com/dataservices/bidata/2/IBIDataService/${method}`,
+      });
+      break;
+    case RaasMethods.RetrieveReport:
+      clients.streamClient.clearSoapHeaders();
+      // This is a required header for RaaS
+      clients.streamClient.addSoapHeader({
+        'a:Action':
+          `http://www.ultipro.com/dataservices/bistream/2/IBIStreamService/${method}`,
+      });
+  }
+}
+
 export async function login(clients: Clients, raasCredential: RaasCredential): Promise<RaasLogOnCallResult> {
-  clients.executeClient.addHttpHeader("Content-Type", "application/soap+xml");
   // This is a required xmlns for RaaS
   addAddressingHeader(clients.executeClient);
-  clients.executeClient.clearSoapHeaders();
-  // This is a required header for RaaS
-  clients.executeClient.addSoapHeader({
-    "a:Action":
-      "http://www.ultipro.com/dataservices/bidata/2/IBIDataService/LogOn",
-  });
+  addActionHeader(clients, RaasMethods.LogOn);
 
   // perform a login
   const logOnCorrelationId = uuid.v4();
@@ -288,13 +315,7 @@ export async function login(clients: Clients, raasCredential: RaasCredential): P
 export async function getReportParameters(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasGetReportParametersCallResult> {
   // This is a required xmlns for RaaS
   addAddressingHeader(clients.executeClient);
-
-  // This is a required header for RaaS
-  clients.executeClient.clearSoapHeaders();
-  clients.executeClient.addSoapHeader({
-    "a:Action":
-      "http://www.ultipro.com/dataservices/bidata/2/IBIDataService/GetReportParameters",
-  });
+  addActionHeader(clients, RaasMethods.GetReportParameters);
 
   const getReportParametersArgs = {
     reportPath: reportPathOrId,
@@ -346,13 +367,7 @@ export async function getReportParameters(clients: Clients, logOnResult: LogOnRe
 export async function executeReport(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasExecuteReportCallResult> {
   // This is a required xmlns for RaaS
   addAddressingHeader(clients.executeClient);
-
-  // This is a required header for RaaS
-  clients.executeClient.clearSoapHeaders();
-  clients.executeClient.addSoapHeader({
-    "a:Action":
-      "http://www.ultipro.com/dataservices/bidata/2/IBIDataService/ExecuteReport",
-  });
+  addActionHeader(clients, RaasMethods.ExecuteReport);
 
   const executeReportArgs = {
     request: {
@@ -407,12 +422,11 @@ export async function executeReport(clients: Clients, logOnResult: LogOnResultTy
 
 export async function retrieveReport(clients: Clients, executeReportResult: ExecuteReportResultTypeDefinition): Promise<RaasRetrieveReportCallResult> {
   addAddressingHeader(clients.streamClient);
+  addActionHeader(clients, RaasMethods.RetrieveReport);
+
   clients.streamClient.wsdl.xmlnsInEnvelope +=
     ' xmlns:h="http://www.ultipro.com/dataservices/bistream/2"';
-  clients.streamClient.clearSoapHeaders();
   clients.streamClient.addSoapHeader({
-    "a:Action":
-      "http://www.ultipro.com/dataservices/bistream/2/IBIStreamService/RetrieveReport",
     "h:ReportKey": executeReportResult.ReportKey,
   });
 
@@ -465,7 +479,7 @@ export async function retrieveReport(clients: Clients, executeReportResult: Exec
     }
 }
 
-export async function logOff(clients: Clients, logOnResult: LogOnResultTypeDefinition): Promise<any> {
+export async function logOff(clients: Clients, logOnResult: LogOnResultTypeDefinition): Promise<RaasLogOffCallResult> {
   addAddressingHeader(clients.executeClient);
   clients.executeClient.clearSoapHeaders();
   clients.executeClient.addSoapHeader({
