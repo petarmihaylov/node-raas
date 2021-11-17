@@ -91,7 +91,7 @@ export const biStreamingServiceErrors = [
 ]
 
 export const notSupported = {
-  reportWithParameters: `This report uses parameters. Running reports with parameters is not supported in node-raas.
+  reportWithRequiredParemeters: `This report uses required parameters. Submitting parameters is not supported in node-raas and attempting to run a report with a required parameter will fail.
 ${upgradeSuggestion}`,
 
   longRunningReports: `Long-running reports for which data is not returned with the response from

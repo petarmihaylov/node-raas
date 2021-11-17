@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
+import { biStreamingServiceErrors, Clients, executeReport, getReportParameters, logOff, RaasCredential, RaasGetReportParametersCallResult, RaasRetrieveReportCallResult, retrieveReport, RetrieveReportResponse } from '..';
 import { config, login, RaasExecuteReportCallResult, RaasLogOffCallResult, RaasLogOnCallResult } from '../core-raas';
 import { biDataServiceErrors, handleBiDataServiceErrors, handleBiStreamingServiceErrors } from '../error';
 import { yellow, blue, magenta, green, red } from 'chalk';
@@ -89,7 +89,7 @@ export default class Pull extends Command {
     // GetReportParameters - Start
     cli.action.start(blue('GetReportParameters'));
     const startTimerGetReportParameters = Date.now();
-    const getReportParametersResult: any = await getReportParameters(clients, logOnResult.result[0].LogOnResult, reportPath )
+    const getReportParametersResult: RaasGetReportParametersCallResult = await getReportParameters(clients, logOnResult.result[0].LogOnResult, reportPath )
     // this.log(JSON.stringify(getReportParametersResult, undefined, 2));
 
     // In the case of an error
@@ -98,8 +98,10 @@ export default class Pull extends Command {
     if (getReportParametersResult.hasWarnings) {
       if (!flags.verbose) {
         this.error(`${blue(`GetReportParameters:`)} ${red(`Warn`)}
-        Troubleshooting suggestions:
-        ${yellow(getReportParametersResult.warningMessage)}`);
+Required Parameters:
+${JSON.stringify(getReportParametersResult.requiredParams,undefined,2)}
+Troubleshooting suggestions:
+${yellow(getReportParametersResult.warningMessage)}`);
       } else {
         this.error(`${blue(`GetReportParameters:`)} ${red(`Warn`)}
 ${blue(`US-CORRELATION-ID:`)} ${magenta(getReportParametersResult.correlationId)}
@@ -140,8 +142,8 @@ ${yellow(getReportParametersResult.warningMessage)}`)
     if (retrieveReportResult.hasWarnings) {
       if (!flags.verbose) {
         this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
-        Troubleshooting suggestions:
-        ${yellow(retrieveReportResult.warningMessage)}`);
+Troubleshooting suggestions:
+${yellow(retrieveReportResult.warningMessage)}`);
       } else {
         this.error(`${blue(`RetrieveReport:`)} ${red(`Warn`)}
 ${blue(`US-CORRELATION-ID:`)} ${magenta(retrieveReportResult.correlationId)}

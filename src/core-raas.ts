@@ -105,9 +105,42 @@ export type RetrieveReportResultTypeDefinition = {
   ReportStream: string | null
 }
 
+export type ReportParameterElement = {
+  Name: string,
+  Required: boolean,
+  DataType: string,
+  MultiValued: boolean,
+}
+
+export type GetReportParametersResultTypeDefinition = {
+  ReportParameters: {
+    ReportParameter: ReportParameterElement[]
+  },
+  Status: string,
+  StatusMessage: string,
+}
+
 export type RetrieveReportResponse = [
   {
     ReportStream: RetrieveReportResultTypeDefinition
+  },
+  string,
+  {
+    Action: {
+      attributes: {
+        "s:mustUnderstand": string
+      },
+      "$value": string
+    },
+    Status: string
+    StatusMessage?: string
+  },
+  string
+];
+
+export type GetReportParametersResponse = [
+  {
+    GetReportParametersResult: GetReportParametersResultTypeDefinition
   },
   string,
   {
@@ -148,6 +181,16 @@ export interface RaasRetrieveReportCallResult {
   warningMessage?: string,
   correlationId: string,
   result: RetrieveReportResponse
+}
+
+export interface RaasGetReportParametersCallResult {
+  hasErrors: boolean,
+  errorMessage?: string,
+  hasWarnings: boolean,
+  warningMessage?: string,
+  correlationId: string,
+  requiredParams: ReportParameterElement[],
+  result: GetReportParametersResponse
 }
 
 export async function config(baseEndpoint: string): Promise<Clients> {
@@ -242,7 +285,7 @@ export async function login(clients: Clients, raasCredential: RaasCredential): P
   }
 }
 
-export async function getReportParameters(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<any> {
+export async function getReportParameters(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasGetReportParametersCallResult> {
   // This is a required xmlns for RaaS
   addAddressingHeader(clients.executeClient);
 
@@ -261,54 +304,42 @@ export async function getReportParameters(clients: Clients, logOnResult: LogOnRe
   const getReportParametersCorrelationId = uuid.v4();
   clients.executeClient.addHttpHeader("US-CORRELATION-ID", getReportParametersCorrelationId);
 
-  const getReportParametersRunResult: any = await clients.executeClient
+  const getReportParametersRunResult: GetReportParametersResponse = await clients.executeClient
     .GetReportParametersAsync(getReportParametersArgs)
-    .then((result: any) => {
-      // console.log(result);
-      // console.log(result[0].ExecuteReportResult);
-      // Logon result
-      // return result[0].ExecuteReportResult;
+    .then((result: GetReportParametersResponse) => {
       return result;
     })
     .catch((error: any) => {
-      // console.error(error.root.Envelope.Header.Action);
       console.error(error.response.status);
       console.error(error.response.statusText);
       console.error(error.response.config);
       console.error(error.body);
-      // console.error(error.rawRequest);
-      // console.error(error.rawResponse);
     });
+
+  let requiredParams: ReportParameterElement[] = getReportParametersRunResult[0]
+    .GetReportParametersResult
+    .ReportParameters
+    .ReportParameter
+    .filter((element: ReportParameterElement) => {
+      return element.Required === true
+  });
 
   const objToReturn = {
     correlationId: getReportParametersCorrelationId,
+    requiredParams,
     result: getReportParametersRunResult,
   }
 
-  if (
-    getReportParametersRunResult[0].GetReportParametersResult.Status === "Success"
-    && getReportParametersRunResult[0].GetReportParametersResult.ReportParameters === null) {
-    return {
-      hasErrors: false,
-      hasWarnings: false,
-      ...objToReturn
-    }
-  } else if (
-    getReportParametersRunResult[0].GetReportParametersResult.Status === "Success"
-    && getReportParametersRunResult[0].GetReportParametersResult.ReportParameters !== null
-  ) {
-    return {
-      hasErrors: false,
-      hasWarnings: true,
-      warningMessage: notSupported.reportWithParameters,
-      ...objToReturn
-    }
-  } else {
-    return {
-      hasErrors: true,
-      errorMessage: getReportParametersRunResult[0].GetReportParametersResult.StatusMessage,
-      ...objToReturn
-    }
+  return {
+    // Indicate errors if Status !== "Success"
+    hasErrors: getReportParametersRunResult[0].GetReportParametersResult.Status !== 'Success',
+    // If we do have an error, report it
+    errorMessage: getReportParametersRunResult[0].GetReportParametersResult.Status !== 'Success' ? getReportParametersRunResult[0].GetReportParametersResult.StatusMessage : '',
+    // Indicate warnings if there are any required parameters
+    hasWarnings: requiredParams.length !== 0,
+    // Pass along the required parameters are not supported message
+    warningMessage: requiredParams.length !== 0 ? notSupported.reportWithRequiredParemeters : '',
+    ...objToReturn
   }
 }
 
