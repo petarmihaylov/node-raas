@@ -101,10 +101,6 @@ export type ExecuteReportResponse = [
   string
 ];
 
-export type RetrieveReportResultTypeDefinition = {
-  ReportStream: string | null
-}
-
 export type ReportParameterElement = {
   Name: string,
   Required: boolean,
@@ -114,7 +110,7 @@ export type ReportParameterElement = {
 
 export type GetReportParametersResultTypeDefinition = {
   ReportParameters: {
-    ReportParameter: ReportParameterElement[]
+    ReportParameter?: ReportParameterElement[]
   },
   Status: string,
   StatusMessage: string,
@@ -122,7 +118,7 @@ export type GetReportParametersResultTypeDefinition = {
 
 export type RetrieveReportResponse = [
   {
-    ReportStream: RetrieveReportResultTypeDefinition
+    ReportStream: string
   },
   string,
   {
@@ -340,13 +336,11 @@ export async function getReportParameters(clients: Clients, logOnResult: LogOnRe
   let requiredParams: ReportParameterElement[] = [];
 
   if (getReportParametersRunResult[0].GetReportParametersResult.Status === 'Success') {
-    requiredParams = getReportParametersRunResult[0]
+    const iteratedRequiredParams = getReportParametersRunResult[0]
       .GetReportParametersResult
-      .ReportParameters
-      .ReportParameter
-      .filter((element: ReportParameterElement) => {
+      .ReportParameters?.ReportParameter?.filter((element: ReportParameterElement) => {
         return element.Required === true
-    });
+    }) || [];
   }
 
 
