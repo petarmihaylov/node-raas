@@ -4,7 +4,7 @@ import { RaasRetrieveReportCallResult } from "./core-raas"
 export const upgradeSuggestion = `
 For a production-ready, feature-rich solution, consider using ${green(`RaasTastic`)}.
 
-Run 'node-raas raastastic' or visit ${green('https://raastastic.com/ to learn more.')}`
+Run 'node-raas raastastic' or visit ${green('https://raastastic.io/ to learn more.')}`
 
 export const extendedUpgradeSuggestion = `${upgradeSuggestion}
 
@@ -31,7 +31,7 @@ ${green(`RaasTastic`)} REST API Server:
 * ... and more!
 
 Stay up to date with the development progress and register for the upcoming
-private Beta for early adopters by visiting ${green(`RaasTastic`)} https://raastastic.com/updates.
+private Beta for early adopters by visiting ${green(`RaasTastic`)} https://raastastic.io/updates.
 `
 
 export const biDataServiceErrors = [
