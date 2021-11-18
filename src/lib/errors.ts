@@ -40,6 +40,10 @@ export const biDataServiceErrors = [
     suggestions: 'Unhandled error occurred. Please run node-raas with the -v flag and paste the REQUES/RESPONSE combination as an issue at https://github.com/petarmihaylov/node-raas. \n!!WARNING!!: IF THIS ERROR OCCURRED DURING A LOGON REQUEST, REMOVE YOUR CREDENTIALS FROM THE REQUEST BEFORE POSTING!!',
   },
   {
+    message: 'Unable to retrieve your report parameters. Please submit a new report request',
+    suggestions: 'Confirm the Report Path or ID is valid for the selected environment. Confirm the report functions correctly when open and run in Business Intelligence.'
+  },
+  {
     message: 'User authentication failed',
     suggestions: 'Confirm the username, password and user API key are correct. Confirm the account is not locked, Inactive, or Suspended.'
   },

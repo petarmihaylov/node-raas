@@ -1,6 +1,6 @@
 import * as soap from 'soap'
 import * as uuid from 'uuid'
-import { notSupported } from '.'
+import { notSupported } from '..'
 
 export type RaasCredential = {
   UserName: string,
@@ -337,19 +337,25 @@ export async function getReportParameters(clients: Clients, logOnResult: LogOnRe
       console.error(error.body);
     });
 
-  let requiredParams: ReportParameterElement[] = getReportParametersRunResult[0]
-    .GetReportParametersResult
-    .ReportParameters
-    .ReportParameter
-    .filter((element: ReportParameterElement) => {
-      return element.Required === true
-  });
+  let requiredParams: ReportParameterElement[] = [];
+
+  if (getReportParametersRunResult[0].GetReportParametersResult.Status === 'Success') {
+    requiredParams = getReportParametersRunResult[0]
+      .GetReportParametersResult
+      .ReportParameters
+      .ReportParameter
+      .filter((element: ReportParameterElement) => {
+        return element.Required === true
+    });
+  }
+
 
   const objToReturn = {
     correlationId: getReportParametersCorrelationId,
     requiredParams,
     result: getReportParametersRunResult,
   }
+
 
   return {
     // Indicate errors if Status !== "Success"
