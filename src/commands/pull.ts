@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
 import { Clients, config, RaasCredential, RaasExecuteReportCallResult, RaasLogOnCallResult, RaasRetrieveReportCallResult } from '../lib/core-raas';
 import { blue } from 'chalk';
-import { blueMagenta } from '../utils/formatters';
-import { executeReportAction, getReportParametersAction, logOnAction, retrieveReportActon } from '../lib/actions';
+import { blueMagenta, decodeStream, FileExportExtensions, saveStream } from '../utils/formatters';
+import { executeReportAction, getReportParametersAction, logOffAction, logOnAction, retrieveReportActon } from '../lib/actions';
 
 export default class Pull extends Command {
   static description = 'Pull data from a BI report through Reports as a Service (RAAS).'
@@ -76,6 +76,8 @@ export default class Pull extends Command {
     await getReportParametersAction(clients, logOnResult, reportPath, flags);
     const executeReportResult: RaasExecuteReportCallResult = await executeReportAction(clients, logOnResult, reportPath, flags);
     const retrieveReportResult: RaasRetrieveReportCallResult = await retrieveReportActon(clients, executeReportResult, flags);
-    await logOnAction(clients, raasCredential, flags);
+    const decodedStream = decodeStream(retrieveReportResult.result[0].ReportStream);
+    await saveStream(decodedStream, 'export', FileExportExtensions.XML);
+    await logOffAction(clients, logOnResult, flags);
   }
 }

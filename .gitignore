@@ -7,3 +7,4 @@
 /tmp
 node_modules
 .example.report.ids.txt
+export.xml
