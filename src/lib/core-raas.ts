@@ -2,6 +2,14 @@ import * as soap from 'soap'
 import * as uuid from 'uuid'
 import { notSupported } from '..'
 
+export enum RaasMethods {
+  LogOn = 'LogOn',
+  GetReportParameters = 'GetReportParameters',
+  ExecuteReport = 'ExecuteReport',
+  RetrieveReport = 'RetrieveReport',
+  LogOff = 'LogOff',
+}
+
 export type RaasCredential = {
   UserName: string,
   Password: string,
@@ -189,14 +197,6 @@ export interface RaasGetReportParametersCallResult {
   result: GetReportParametersResponse
 }
 
-export enum RaasMethods {
-  LogOn = 'LogOn',
-  GetReportParameters = 'GetReportParameters',
-  ExecuteReport = 'ExecuteReport',
-  RetrieveReport = 'RetrieveReport',
-  LogOff = 'LogOff',
-}
-
 export async function config(baseEndpoint: string): Promise<Clients> {
   const url = `https://${baseEndpoint}/services/BIDataService`;
   const executeClient: soap.Client = await soap.createClientAsync(url, {
@@ -336,7 +336,7 @@ export async function getReportParameters(clients: Clients, logOnResult: LogOnRe
   let requiredParams: ReportParameterElement[] = [];
 
   if (getReportParametersRunResult[0].GetReportParametersResult.Status === 'Success') {
-    const iteratedRequiredParams = getReportParametersRunResult[0]
+    requiredParams = getReportParametersRunResult[0]
       .GetReportParametersResult
       .ReportParameters?.ReportParameter?.filter((element: ReportParameterElement) => {
         return element.Required === true
@@ -456,7 +456,7 @@ export async function retrieveReport(clients: Clients, executeReportResult: Exec
       result: retrieveReportRunResult
     }
 
-    if (retrieveReportRunResult[2].Status === "Working") {
+    if (retrieveReportRunResult[2]?.Status === "Working") {
       return {
         hasErrors: false,
         hasWarnings: true,
