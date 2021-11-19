@@ -26,8 +26,17 @@ export async function getReportParametersAction(clients: Clients, logOnResult: R
   const getReportParametersResult: RaasGetReportParametersCallResult = await getReportParameters(clients, logOnResult.result[0].LogOnResult, reportPath )
   // this.log(JSON.stringify(getReportParametersResult, undefined, 2));
 
+  // Processing completed
+  const msElapsedGetReportParameters = Date.now() - startTimerGetReportParameters;
+
   // In the case of an error
-  if (getReportParametersResult.hasErrors) { handleBiDataServiceErrors(getReportParametersResult, 'GetReportParametersResult', flags.verbose);}
+  if (getReportParametersResult.hasErrors) {
+    cli.action.stop(`${red(`Failed`)} | ${blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
+    handleBiDataServiceErrors(getReportParametersResult, 'GetReportParametersResult', flags.verbose);
+  }
+
+  // Getting the parameters was successful, so we can note that here
+  cli.action.stop(`${green(`Success`)} | ${blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
 
   if (getReportParametersResult.hasWarnings) {
     if (!flags.verbose) {
@@ -48,10 +57,12 @@ ${yellow(getReportParametersResult.warningMessage)}`)
     }
   }
 
-
-  const msElapsedGetReportParameters = Date.now() - startTimerGetReportParameters;
   cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(logOnResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedGetReportParameters / 1000}s`)}`)
   // GetReportParameters - End
+
+  if (flags?.console) {
+    console.log(blue(JSON.stringify(getReportParametersResult.result[0].GetReportParametersResult, undefined, 2)))
+  }
 }
 
 export async function executeReportAction(clients: Clients,  logOnResult: RaasLogOnCallResult, reportPath: string, flags: any): Promise<RaasExecuteReportCallResult> {
@@ -59,10 +70,15 @@ export async function executeReportAction(clients: Clients,  logOnResult: RaasLo
   cli.action.start(blue('ExecuteReport'))
   const startTimeExecuteReport = Date.now();
   const executeReportResult: RaasExecuteReportCallResult = await executeReport(clients, logOnResult.result[0].LogOnResult, reportPath);
+
+  // Execute Report action completed
+  const msElapsedExecuteReport = Date.now() - startTimeExecuteReport;
+
   if (executeReportResult.hasErrors) {
+    cli.action.stop(`${red(`Failed`)} | ${blueMagenta(`Took:`, `${msElapsedExecuteReport / 1000}s`)}`)
     handleBiDataServiceErrors(executeReportResult, 'ExecuteReportResult', flags.verbose);
   }
-  const msElapsedExecuteReport = Date.now() - startTimeExecuteReport;
+
   cli.action.stop(`${green(`Success`)} | ${blue(`US-CORRELATION-ID:`)} ${magenta(executeReportResult.correlationId)} | ${blueMagenta(`Took:`, `${msElapsedExecuteReport / 1000}s`)}`)
   // Execute Report - End
   return executeReportResult
@@ -75,7 +91,10 @@ export async function retrieveReportActon(clients: Clients, executeReportResult:
   const retrieveReportResult:RaasRetrieveReportCallResult = await retrieveReport(clients, executeReportResult.result[0].ExecuteReportResult)
   const msElapsedRetrieveReport = Date.now() - startTimeRetrieveReport;
   // In the case of an error
-  if (retrieveReportResult.hasErrors) { handleBiStreamingServiceErrors(retrieveReportResult, flags.verbose);}
+  if (retrieveReportResult.hasErrors) {
+    cli.action.stop(`${green(`Success`)} | ${blueMagenta(`Took:`, `${msElapsedRetrieveReport / 1000}s`)}`)
+    handleBiStreamingServiceErrors(retrieveReportResult, flags.verbose);
+  }
   // When Status === 'Working'
   if (retrieveReportResult.hasWarnings) {
     if (!flags.verbose) {
