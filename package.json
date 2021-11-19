@@ -25,6 +25,7 @@
     "@types/chai": "^4",
     "@types/mocha": "^5",
     "@types/node": "^10",
+    "@types/sax": "^1.2.3",
     "chai": "^4",
     "eslint": "^5.13",
     "eslint-config-oclif": "^3.1",
@@ -32,6 +33,7 @@
     "globby": "^10",
     "mocha": "^5",
     "nyc": "^14",
+    "rxjs": "~6.6.0",
     "ts-node": "^8",
     "typescript": "^3.3"
   },

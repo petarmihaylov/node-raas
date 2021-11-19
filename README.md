@@ -29,28 +29,54 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`node-raas hello [FILE]`](#node-raas-hello-file)
+* [`node-raas console`](#node-raas-console)
 * [`node-raas help [COMMAND]`](#node-raas-help-command)
+* [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
+* [`node-raas raastastic`](#node-raas-raastastic)
 
-## `node-raas hello [FILE]`
+## `node-raas console`
 
-describe the command here
+Quickly test reports and access with this interactive console pulling data from a BI report through Reports as a Service (RAAS).
 
 ```
 USAGE
-  $ node-raas hello [FILE]
+  $ node-raas console
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -a, --userApiKey=userApiKey
+      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
+      Security > Service Account Administration.
 
-EXAMPLE
-  $ node-raas hello
-  hello world from ./src/hello.ts!
+  -c, --customerApiKey=customerApiKey
+      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      Administration.
+
+  -e, 
+  --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
+  com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
+      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol 
+      (https://).
+
+  -h, --help
+      show CLI help
+
+  -p, --password=password
+      (required) Password for the provided username.
+
+  -u, --username=username
+      (required) Username of user or service account. User is required for pulling UKG Time Management data.
+
+  -v, --verbose
+      Output raw request/response combination for failing requests.
+
+  --console
+
+EXAMPLES
+  $ node-raas console
+  $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -68,4 +94,68 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.4/src/commands/help.ts)_
+
+## `node-raas pull REPORTPATHORID`
+
+Pull data from a BI report through Reports as a Service (RAAS).
+
+```
+USAGE
+  $ node-raas pull REPORTPATHORID
+
+ARGUMENTS
+  REPORTPATHORID  Report path or ID from Cognos (BI). Obtained by inspecting Properties of a BI report. (Right-click >
+                  Properties > General > Advanced > [Search path | ID].)
+
+OPTIONS
+  -a, --userApiKey=userApiKey
+      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
+      Security > Service Account Administration.
+
+  -c, --customerApiKey=customerApiKey
+      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      Administration.
+
+  -e, 
+  --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
+  com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
+      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include 
+      the protocol (https://).
+
+  -h, --help
+      show CLI help
+
+  -l, --printCreds
+      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials 
+      should be surrounded in double-quotes.
+
+  -p, --password=password
+      (required) Password for the provided username.
+
+  -u, --username=username
+      (required) Username of user or service account. User is required for pulling UKG Time Management data.
+
+  -v, --verbose
+      Output raw request/response combination for failing requests.
+
+EXAMPLES
+  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p 
+  "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
+  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master 
+  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p 
+  "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
+```
+
+_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/pull.ts)_
+
+## `node-raas raastastic`
+
+Displays information about RaasTastic - a production-ready, feature-rich set of tools built on top of node-raas.
+
+```
+USAGE
+  $ node-raas raastastic
+```
+
+_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/raastastic.ts)_
 <!-- commandsstop -->

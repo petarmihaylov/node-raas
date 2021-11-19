@@ -242,7 +242,7 @@ export default class Pull extends Command {
             }
             try {
               executeReportResult = await executeReportAction(clients, logOnResult, reportPathOrId, flags)
-            } catch (e: any) {
+            } catch (e) {
               console.error(e.message);
             }
 
