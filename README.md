@@ -20,7 +20,7 @@ $ npm install -g node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-node-raas/0.0.0 linux-x64 node-v16.13.0
+node-raas/0.0.0 darwin-x64 node-v16.13.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -44,11 +44,11 @@ USAGE
 
 OPTIONS
   -a, --userApiKey=userApiKey
-      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
-      Security > Service Account Administration.
+      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > 
+      Service Account Administration.
 
   -c, --customerApiKey=customerApiKey
-      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
       Administration.
 
   -e, 
@@ -61,10 +61,10 @@ OPTIONS
       show CLI help
 
   -p, --password=password
-      (required) Password for the provided username.
+      Password for the provided username.
 
   -u, --username=username
-      (required) Username of user or service account. User is required for pulling UKG Time Management data.
+      Username of user or service account. Employee user is required for pulling UKG Time Management data.
 
   -v, --verbose
       Output raw request/response combination for failing requests.

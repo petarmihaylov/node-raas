@@ -17,13 +17,13 @@ export default class Pull extends Command {
     // flag with no value (-h, --help)
     help: flags.help({char: 'h'}),
     // flag with a value (-u, --username="VALUE")
-    username: flags.string({char: 'u', required: true, description: 'Username of user or service account. User is required for pulling UKG Time Management data.'}),
+    username: flags.string({char: 'u', description: 'Username of user or service account. Employee user is required for pulling UKG Time Management data.'}),
     // flag with a value (-p, --password="VALUE")
-    password: flags.string({char: 'p', required: true, description: 'Password for the provided username.'}),
+    password: flags.string({char: 'p', description: 'Password for the provided username.'}),
     // flag with a value (-c, --customer-api-key="VALUE")
-    customerApiKey: flags.string({char: 'c', required: true, description: 'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.'}),
+    customerApiKey: flags.string({char: 'c', description: 'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.'}),
     // flag with a value (-a, --user-api-key="VALUE")
-    userApiKey: flags.string({char: 'a', required: true, description: 'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.'}),
+    userApiKey: flags.string({char: 'a', description: 'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.'}),
     // flag with a value (-e, --base-endpoint-url="VALUE")
     baseEndpointUrl: flags.string(
       {char: 'e',
@@ -242,8 +242,11 @@ export default class Pull extends Command {
             }
             try {
               executeReportResult = await executeReportAction(clients, logOnResult, reportPathOrId, flags)
-            } catch (e) {
-              console.error(e.message);
+            } catch (error) {
+              let errorMessage = "Failed to do something exceptional";
+              if (error instanceof Error) {
+                errorMessage = error.message;
+              }
             }
 
             // If there are  no errors store the report key and indicate there is a pending report
@@ -259,7 +262,7 @@ export default class Pull extends Command {
           if (reportKey !== '' && retrievedLastReport === false) {
             const retrieveReportResult: RaasRetrieveReportCallResult = await retrieveReportActon(clients, executeReportResult, flags);
             const decodedStream = await decodeStream(retrieveReportResult.result[0].ReportStream);
-            await saveStream(decodedStream, 'export', FileExportExtensions.XML);
+            console.log(decodedStream);
             reportKey = ''
             retrievedLastReport = true
           } else (
@@ -270,10 +273,13 @@ export default class Pull extends Command {
           keepLooping = false
           break;
       }
-      if (keepLooping) repl()
+      if (keepLooping) {
+        repl()
+      } else {
+        await logOffAction(clients, logOnResult, flags);
+      }
     }
 
     await repl();
-    await logOffAction(clients, logOnResult, flags);
   }
 }
