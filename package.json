@@ -6,6 +6,7 @@
   "bin": {
     "node-raas": "./bin/run"
   },
+  "private": "false",
   "bugs": "https://github.com/petarmihaylov/node-raas/issues",
   "dependencies": {
     "@oclif/command": "^1",
