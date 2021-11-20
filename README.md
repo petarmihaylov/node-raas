@@ -16,11 +16,11 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g node-raas
+$ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-node-raas/0.0.0 darwin-x64 node-v16.13.0
+@petarmihaylov/node-raas/0.0.1 linux-x64 node-v16.13.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -44,17 +44,17 @@ USAGE
 
 OPTIONS
   -a, --userApiKey=userApiKey
-      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > 
+      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security >
       Service Account Administration.
 
   -c, --customerApiKey=customerApiKey
-      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
       Administration.
 
-  -e, 
+  -e,
   --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
   com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol 
+      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol
       (https://).
 
   -h, --help
@@ -76,7 +76,7 @@ EXAMPLES
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/console.ts)_
+_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.1/src/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -109,24 +109,24 @@ ARGUMENTS
 
 OPTIONS
   -a, --userApiKey=userApiKey
-      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
+      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION >
       Security > Service Account Administration.
 
   -c, --customerApiKey=customerApiKey
-      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
       Administration.
 
-  -e, 
+  -e,
   --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
   com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include 
+      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include
       the protocol (https://).
 
   -h, --help
       show CLI help
 
   -l, --printCreds
-      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials 
+      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials
       should be surrounded in double-quotes.
 
   -p, --password=password
@@ -139,14 +139,14 @@ OPTIONS
       Output raw request/response combination for failing requests.
 
 EXAMPLES
-  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p 
+  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
-  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master 
-  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p 
+  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master
+  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.1/src/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -157,5 +157,5 @@ USAGE
   $ node-raas raastastic
 ```
 
-_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.0/src/commands/raastastic.ts)_
+_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.1/src/commands/raastastic.ts)_
 <!-- commandsstop -->
