@@ -1,17 +1,21 @@
 {
-  "extends": [
-    "oclif",
-    "oclif-typescript"
-  ],
+  "extends": ["oclif", "oclif-typescript"],
   "rules": {
-    "node/no-missing-import": ["error", {
-      "allowModules": [],
-      "tryExtensions": [".js", ".json", ".node", ".ts", ".d.ts"]
-    }]
+    "node/no-missing-import": [
+      "error",
+      {
+        "allowModules": [],
+        "tryExtensions": [".js", ".json", ".node", ".ts", ".d.ts"]
+      }
+    ],
+    "operator-linebreak": 0,
+    "arrow-parens": 0,
+    "indent": 0,
+    "semi": 0
   },
   "settings": {
     "node": {
-        "tryExtensions": [".js", ".json", ".node", ".ts", ".d.ts"]
+      "tryExtensions": [".js", ".json", ".node", ".ts", ".d.ts"]
     }
   }
 }

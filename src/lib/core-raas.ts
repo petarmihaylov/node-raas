@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
-import * as soap from 'soap'
-import * as uuid from 'uuid'
-import {notSupported} from '..'
+import * as soap from 'soap';
+import * as uuid from 'uuid';
+import {notSupported} from '..';
 
 export enum RaasMethods {
   LogOn = 'LogOn',
@@ -16,17 +16,17 @@ export type RaasCredential = {
   Password: string;
   ClientAccessKey: string;
   UserAccessKey: string;
-}
+};
 
 export type RunParams = {
   retrieveReportRetries: number;
   dataRetrievedOrError: boolean;
-}
+};
 
 export type Clients = {
   executeClient: soap.Client;
   streamClient: soap.Client;
-}
+};
 
 export type RaasResponseBase = [
   string,
@@ -35,11 +35,11 @@ export type RaasResponseBase = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
   },
-  string
-]
+  string,
+];
 
 export type LogOnResultTypeDefinition = {
   ClientAccessKey: string;
@@ -48,7 +48,7 @@ export type LogOnResultTypeDefinition = {
   ServiceId?: string;
   Token?: string;
   InstanceKey?: string;
-}
+};
 
 export type LogOnResponse = [
   {
@@ -60,16 +60,16 @@ export type LogOnResponse = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
   },
-  string
-]
+  string,
+];
 
 export type LogOffResultTypeDefinition = {
   ClientAccessKey: string;
   Status: string;
-}
+};
 
 export type LogOffResponse = [
   {
@@ -81,18 +81,18 @@ export type LogOffResponse = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
   },
-  string
-]
+  string,
+];
 
 export type ExecuteReportResultTypeDefinition = {
   Status: string;
   StatusMessage?: string;
   ReportKey?: string;
   ReportRetrievalUrl?: string;
-}
+};
 
 export type ExecuteReportResponse = [
   {
@@ -104,10 +104,10 @@ export type ExecuteReportResponse = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
   },
-  string
+  string,
 ];
 
 export type ReportParameterElement = {
@@ -115,7 +115,7 @@ export type ReportParameterElement = {
   Required: boolean;
   DataType: string;
   MultiValued: boolean;
-}
+};
 
 export type GetReportParametersResultTypeDefinition = {
   ReportParameters: {
@@ -123,7 +123,7 @@ export type GetReportParametersResultTypeDefinition = {
   };
   Status: string;
   StatusMessage: string;
-}
+};
 
 export type RetrieveReportResponse = [
   {
@@ -135,12 +135,12 @@ export type RetrieveReportResponse = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
     Status: string;
     StatusMessage?: string;
   },
-  string
+  string,
 ];
 
 export type GetReportParametersResponse = [
@@ -153,12 +153,12 @@ export type GetReportParametersResponse = [
       attributes: {
         's:mustUnderstand': string;
       };
-      '$value': string;
+      $value: string;
     };
     Status: string;
     StatusMessage?: string;
   },
-  string
+  string,
 ];
 
 export interface RaasLogOnCallResult {
@@ -199,29 +199,31 @@ export interface RaasGetReportParametersCallResult {
 }
 
 export async function config(baseEndpoint: string): Promise<Clients> {
-  const url = `https://${baseEndpoint}/services/BIDataService`
+  const url = `https://${baseEndpoint}/services/BIDataService`;
   const executeClient: soap.Client = await soap.createClientAsync(url, {
     forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
     escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
-  })
-  executeClient.addHttpHeader('Content-Type', 'application/soap+xml')
+  });
+  executeClient.addHttpHeader('Content-Type', 'application/soap+xml');
 
   // ╔═╗┌┬┐┬─┐┌─┐┌─┐┌┬┐┬┌┐┌┌─┐  ╔═╗┬  ┬┌─┐┌┐┌┌┬┐  ╔═╗┌─┐┌┐┌┌─┐┬┌─┐
   // ╚═╗ │ ├┬┘├┤ ├─┤││││││││ ┬  ║  │  │├┤ │││ │   ║  │ ││││├┤ ││ ┬
   // ╚═╝ ┴ ┴└─└─┘┴ ┴┴ ┴┴┘└┘└─┘  ╚═╝┴─┘┴└─┘┘└┘ ┴   ╚═╝└─┘┘└┘└  ┴└─┘
 
-  const streaminServiceUrl =
-    `https://${baseEndpoint}/services/BIStreamingService`
-  const streamClient: soap.Client = await soap.createClientAsync(streaminServiceUrl, {
-    forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
-    escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
-  })
-  streamClient.addHttpHeader('Content-Type', 'application/soap+xml')
+  const streaminServiceUrl = `https://${baseEndpoint}/services/BIStreamingService`;
+  const streamClient: soap.Client = await soap.createClientAsync(
+    streaminServiceUrl,
+    {
+      forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
+      escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
+    },
+  );
+  streamClient.addHttpHeader('Content-Type', 'application/soap+xml');
 
   return {
     executeClient,
     streamClient,
-  }
+  };
 }
 
 export function addAddressingHeader(soapClient: soap.Client) {
@@ -231,136 +233,163 @@ export function addAddressingHeader(soapClient: soap.Client) {
     ) === -1
   ) {
     soapClient.wsdl.xmlnsInEnvelope +=
-      ' xmlns:a="http://www.w3.org/2005/08/addressing"'
+      ' xmlns:a="http://www.w3.org/2005/08/addressing"';
   }
 }
 
 export function addActionHeader(clients: Clients, method: RaasMethods) {
   switch (method) {
-  case RaasMethods.LogOn:
-  case RaasMethods.GetReportParameters:
-  case RaasMethods.ExecuteReport:
-  case RaasMethods.LogOff:
-    clients.executeClient.clearSoapHeaders()
-    // This is a required header for RaaS
-    clients.executeClient.addSoapHeader({
-      'a:Action':
-          `http://www.ultipro.com/dataservices/bidata/2/IBIDataService/${method}`,
-    })
-    break
-  case RaasMethods.RetrieveReport:
-    clients.streamClient.clearSoapHeaders()
-    // This is a required header for RaaS
-    clients.streamClient.addSoapHeader({
-      'a:Action':
-          `http://www.ultipro.com/dataservices/bistream/2/IBIStreamService/${method}`,
-    })
+    case RaasMethods.LogOn:
+    case RaasMethods.GetReportParameters:
+    case RaasMethods.ExecuteReport:
+    case RaasMethods.LogOff:
+      clients.executeClient.clearSoapHeaders();
+      // This is a required header for RaaS
+      clients.executeClient.addSoapHeader({
+        'a:Action': `http://www.ultipro.com/dataservices/bidata/2/IBIDataService/${method}`,
+      });
+      break;
+    case RaasMethods.RetrieveReport:
+      clients.streamClient.clearSoapHeaders();
+      // This is a required header for RaaS
+      clients.streamClient.addSoapHeader({
+        'a:Action': `http://www.ultipro.com/dataservices/bistream/2/IBIStreamService/${method}`,
+      });
   }
 }
 
-export async function login(clients: Clients, raasCredential: RaasCredential): Promise<RaasLogOnCallResult> {
+export async function login(
+  clients: Clients,
+  raasCredential: RaasCredential,
+): Promise<RaasLogOnCallResult> {
   // This is a required xmlns for RaaS
-  addAddressingHeader(clients.executeClient)
-  addActionHeader(clients, RaasMethods.LogOn)
+  addAddressingHeader(clients.executeClient);
+  addActionHeader(clients, RaasMethods.LogOn);
 
   // perform a login
-  const logOnCorrelationId = uuid.v4()
-  clients.executeClient.addHttpHeader('US-CORRELATION-ID', logOnCorrelationId)
+  const logOnCorrelationId = uuid.v4();
+  clients.executeClient.addHttpHeader('US-CORRELATION-ID', logOnCorrelationId);
   const logOnResponse: LogOnResponse = await clients.executeClient
-  .LogOnAsync(
-    {
-      logOnRequest: raasCredential,
-    },
-    // We can pass in the generated correlationId to the client so our internal 'exchangeIds' match the
-    // US-CORRELATION-ID passed to RaaS.
-    {
-      exchangeId: logOnCorrelationId,
-    },
-  )
-  .then((result: LogOnResponse) => {
-    // console.log(result);
-    // console.log(result[0].LogOnResult);
-    // Logon result
-    // return result[0].LogOnResult;
-    return result
-  })
-  .catch((error: any) => {
-    throw new Error(error)
-  })
+    .LogOnAsync(
+      {
+        logOnRequest: raasCredential,
+      },
+      // We can pass in the generated correlationId to the client so our internal 'exchangeIds' match the
+      // US-CORRELATION-ID passed to RaaS.
+      {
+        exchangeId: logOnCorrelationId,
+      },
+    )
+    .then((result: LogOnResponse) => {
+      // console.log(result);
+      // console.log(result[0].LogOnResult);
+      // Logon result
+      // return result[0].LogOnResult;
+      return result;
+    })
+    .catch((error: any) => {
+      throw new Error(error);
+    });
 
   const objToReturn = {
     correlationId: logOnCorrelationId,
     result: logOnResponse,
-  }
+  };
 
   if (logOnResponse[0].LogOnResult.Status === 'Ok') {
     return {
       hasErrors: false,
       ...objToReturn,
-    }
+    };
   }
 
   return {
     hasErrors: true,
     ...objToReturn,
-  }
+  };
 }
 
-export async function getReportParameters(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasGetReportParametersCallResult> {
+export async function getReportParameters(
+  clients: Clients,
+  logOnResult: LogOnResultTypeDefinition,
+  reportPathOrId: string,
+): Promise<RaasGetReportParametersCallResult> {
   // This is a required xmlns for RaaS
-  addAddressingHeader(clients.executeClient)
-  addActionHeader(clients, RaasMethods.GetReportParameters)
+  addAddressingHeader(clients.executeClient);
+  addActionHeader(clients, RaasMethods.GetReportParameters);
 
   const getReportParametersArgs = {
     reportPath: reportPathOrId,
     context: logOnResult,
-  }
+  };
 
-  const getReportParametersCorrelationId = uuid.v4()
-  clients.executeClient.addHttpHeader('US-CORRELATION-ID', getReportParametersCorrelationId)
+  const getReportParametersCorrelationId = uuid.v4();
+  clients.executeClient.addHttpHeader(
+    'US-CORRELATION-ID',
+    getReportParametersCorrelationId,
+  );
 
-  const getReportParametersRunResult: GetReportParametersResponse = await clients.executeClient
-  .GetReportParametersAsync(getReportParametersArgs)
-  .then((result: GetReportParametersResponse) => {
-    return result
-  })
-  .catch((error: any) => {
-    throw new Error(error)
-  })
+  const getReportParametersRunResult: GetReportParametersResponse =
+    await clients.executeClient
+      .GetReportParametersAsync(getReportParametersArgs)
+      .then((result: GetReportParametersResponse) => {
+        return result;
+      })
+      .catch((error: any) => {
+        throw new Error(error);
+      });
 
-  let requiredParams: ReportParameterElement[] = []
+  let requiredParams: ReportParameterElement[] = [];
 
-  if (getReportParametersRunResult[0].GetReportParametersResult.Status === 'Success') {
-    requiredParams = getReportParametersRunResult[0]
-    .GetReportParametersResult
-    .ReportParameters?.ReportParameter?.filter((element: ReportParameterElement) => {
-      return element.Required === true
-    }) || []
+  if (
+    getReportParametersRunResult[0].GetReportParametersResult.Status ===
+    'Success'
+  ) {
+    requiredParams =
+      getReportParametersRunResult[0].GetReportParametersResult.ReportParameters?.ReportParameter?.filter(
+        (element: ReportParameterElement) => {
+          return element.Required === true;
+        },
+      ) || [];
   }
 
   const objToReturn = {
     correlationId: getReportParametersCorrelationId,
     requiredParams,
     result: getReportParametersRunResult,
-  }
+  };
 
   return {
     // Indicate errors if Status !== "Success"
-    hasErrors: getReportParametersRunResult[0].GetReportParametersResult.Status !== 'Success',
+    hasErrors:
+      getReportParametersRunResult[0].GetReportParametersResult.Status !==
+      'Success',
     // If we do have an error, report it
-    errorMessage: getReportParametersRunResult[0].GetReportParametersResult.Status === 'Success' ? '' : getReportParametersRunResult[0].GetReportParametersResult.StatusMessage,
+    errorMessage:
+      getReportParametersRunResult[0].GetReportParametersResult.Status ===
+      'Success'
+        ? ''
+        : getReportParametersRunResult[0].GetReportParametersResult
+            .StatusMessage,
     // Indicate warnings if there are any required parameters
     hasWarnings: requiredParams.length > 0,
     // Pass along the required parameters are not supported message
-    warningMessage: requiredParams.length > 0 ? notSupported.reportWithRequiredParemeters : '',
+    warningMessage:
+      requiredParams.length > 0
+        ? notSupported.reportWithRequiredParemeters
+        : '',
     ...objToReturn,
-  }
+  };
 }
 
-export async function executeReport(clients: Clients, logOnResult: LogOnResultTypeDefinition, reportPathOrId: string): Promise<RaasExecuteReportCallResult> {
+export async function executeReport(
+  clients: Clients,
+  logOnResult: LogOnResultTypeDefinition,
+  reportPathOrId: string,
+): Promise<RaasExecuteReportCallResult> {
   // This is a required xmlns for RaaS
-  addAddressingHeader(clients.executeClient)
-  addActionHeader(clients, RaasMethods.ExecuteReport)
+  addAddressingHeader(clients.executeClient);
+  addActionHeader(clients, RaasMethods.ExecuteReport);
 
   const executeReportArgs = {
     request: {
@@ -368,63 +397,74 @@ export async function executeReport(clients: Clients, logOnResult: LogOnResultTy
       ReportParameters: [],
     },
     context: logOnResult,
-  }
+  };
 
-  const executeReportCorrelationId = uuid.v4()
-  clients.executeClient.addHttpHeader('US-CORRELATION-ID', executeReportCorrelationId)
+  const executeReportCorrelationId = uuid.v4();
+  clients.executeClient.addHttpHeader(
+    'US-CORRELATION-ID',
+    executeReportCorrelationId,
+  );
 
-  const executeReportRunResult: ExecuteReportResponse = await clients.executeClient
-  .ExecuteReportAsync(executeReportArgs)
-  .then((result: ExecuteReportResponse) => {
-    return result
-  })
-  .catch((error: any) => {
-    throw new Error(error)
-  })
+  const executeReportRunResult: ExecuteReportResponse =
+    await clients.executeClient
+      .ExecuteReportAsync(executeReportArgs)
+      .then((result: ExecuteReportResponse) => {
+        return result;
+      })
+      .catch((error: any) => {
+        throw new Error(error);
+      });
 
   const objToReturn = {
     correlationId: executeReportCorrelationId,
     result: executeReportRunResult,
-  }
+  };
 
   if (executeReportRunResult[0].ExecuteReportResult.Status === 'Success') {
     return {
       hasErrors: false,
       ...objToReturn,
-    }
+    };
   }
 
   return {
     hasErrors: true,
     ...objToReturn,
-  }
+  };
 }
 
-export async function retrieveReport(clients: Clients, executeReportResult: ExecuteReportResultTypeDefinition): Promise<RaasRetrieveReportCallResult> {
-  addAddressingHeader(clients.streamClient)
-  addActionHeader(clients, RaasMethods.RetrieveReport)
+export async function retrieveReport(
+  clients: Clients,
+  executeReportResult: ExecuteReportResultTypeDefinition,
+): Promise<RaasRetrieveReportCallResult> {
+  addAddressingHeader(clients.streamClient);
+  addActionHeader(clients, RaasMethods.RetrieveReport);
 
   clients.streamClient.wsdl.xmlnsInEnvelope +=
-    ' xmlns:h="http://www.ultipro.com/dataservices/bistream/2"'
+    ' xmlns:h="http://www.ultipro.com/dataservices/bistream/2"';
   clients.streamClient.addSoapHeader({
     'h:ReportKey': executeReportResult.ReportKey,
-  })
+  });
 
-  const retrieveReportCorrelationId = uuid.v4()
-  clients.streamClient.addHttpHeader('US-CORRELATION-ID', retrieveReportCorrelationId)
-  const retrieveReportRunResult: RetrieveReportResponse = await clients.streamClient
-  .RetrieveReportAsync()
-  .then((result: any) => {
-    return result
-  })
-  .catch((error: any) => {
-    throw new Error(error)
-  })
+  const retrieveReportCorrelationId = uuid.v4();
+  clients.streamClient.addHttpHeader(
+    'US-CORRELATION-ID',
+    retrieveReportCorrelationId,
+  );
+  const retrieveReportRunResult: RetrieveReportResponse =
+    await clients.streamClient
+      .RetrieveReportAsync()
+      .then((result: any) => {
+        return result;
+      })
+      .catch((error: any) => {
+        throw new Error(error);
+      });
 
   const objToReturn = {
     correlationId: retrieveReportCorrelationId,
     result: retrieveReportRunResult,
-  }
+  };
 
   if (retrieveReportRunResult[2]?.Status === 'Working') {
     return {
@@ -432,7 +472,7 @@ export async function retrieveReport(clients: Clients, executeReportResult: Exec
       hasWarnings: true,
       warningMessage: notSupported.longRunningReports,
       ...objToReturn,
-    }
+    };
   }
 
   if (retrieveReportRunResult[2].Status === 'Failed') {
@@ -441,52 +481,55 @@ export async function retrieveReport(clients: Clients, executeReportResult: Exec
       errorMessage: retrieveReportRunResult[2].StatusMessage,
       hasWarnings: false,
       ...objToReturn,
-    }
+    };
   }
 
   return {
     hasErrors: false,
     hasWarnings: false,
     ...objToReturn,
-  }
+  };
 }
 
-export async function logOff(clients: Clients, logOnResult: LogOnResultTypeDefinition): Promise<RaasLogOffCallResult> {
-  addAddressingHeader(clients.executeClient)
-  clients.executeClient.clearSoapHeaders()
+export async function logOff(
+  clients: Clients,
+  logOnResult: LogOnResultTypeDefinition,
+): Promise<RaasLogOffCallResult> {
+  addAddressingHeader(clients.executeClient);
+  clients.executeClient.clearSoapHeaders();
   clients.executeClient.addSoapHeader({
     'a:Action':
       'http://www.ultipro.com/dataservices/bidata/2/IBIDataService/LogOff',
-  })
+  });
 
-  const logOffCorrelationId = uuid.v4()
-  clients.executeClient.addHttpHeader('US-CORRELATION-ID', logOffCorrelationId)
+  const logOffCorrelationId = uuid.v4();
+  clients.executeClient.addHttpHeader('US-CORRELATION-ID', logOffCorrelationId);
 
   const logOffRunResult: any = await clients.executeClient
-  .LogOffAsync({
-    context: logOnResult,
-  })
-  .then((result: any) => {
-    return result
-  })
-  .catch((error: any) => {
-    throw new Error(error)
-  })
+    .LogOffAsync({
+      context: logOnResult,
+    })
+    .then((result: any) => {
+      return result;
+    })
+    .catch((error: any) => {
+      throw new Error(error);
+    });
 
   const objToReturn = {
     correlationId: logOffCorrelationId,
     result: logOffRunResult,
-  }
+  };
 
   if (logOffRunResult[0].LogOffResult.Status === 'LoggedOff') {
     return {
       hasErrors: false,
       ...objToReturn,
-    }
+    };
   }
 
   return {
     hasErrors: true,
     ...objToReturn,
-  }
+  };
 }

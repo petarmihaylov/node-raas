@@ -32,10 +32,13 @@
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "globby": "^10",
     "mocha": "^5",
     "nock": "^13.2.1",
     "nyc": "^14",
+    "prettier": "^2.5.1",
     "rxjs": "~6.6.0",
     "ts-node": "^8",
     "typescript": "^3.3"
