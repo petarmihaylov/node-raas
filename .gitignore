@@ -9,3 +9,4 @@ node_modules
 .example.report.ids.txt
 export.xml
 .DS_Store
+tsconfig.tsbuildinfo
