@@ -39,27 +39,28 @@ export default class Pull extends Command {
       char: 'u',
       required: true,
       description:
-        'Username of user or service account. User is required for pulling UKG Time Management data.',
+        'Username of user or service account. Employee User is required for pulling UKG Time Management data.',
     }),
     // flag with a value (-p, --password="VALUE")
     password: flags.string({
       char: 'p',
       required: true,
-      description: 'Password for the provided username.',
+      description:
+        'Password for the provided username. Be sure to escape any special characters for your command line. (Ex: ! should be \\! in bash shells.)',
     }),
     // flag with a value (-c, --customer-api-key="VALUE")
     customerApiKey: flags.string({
       char: 'c',
       required: true,
       description:
-        'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
+        'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration or Web Services.',
     }),
     // flag with a value (-a, --user-api-key="VALUE")
     userApiKey: flags.string({
       char: 'a',
       required: true,
       description:
-        'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
+        'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services.',
     }),
     // flag with a value (-e, --base-endpoint-url="VALUE")
     baseEndpointUrl: flags.string({
@@ -83,7 +84,7 @@ export default class Pull extends Command {
     printCreds: flags.boolean({
       char: 'l',
       description:
-        'Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials should be surrounded in double-quotes.',
+        'Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \\! in bash.)',
       default: false,
     }),
     // flag with no value (-v, --verbose)
