@@ -1,6 +1,6 @@
 {
   "name": "@petarmihaylov/node-raas",
-  "description": "A tiny library and CLI for interacting with the Reports as a Service (RAAS) API from UKG (Ultimate Kronos Group). \nThis project is maintained by the team behind RaasTastic and the community. It provides a balanced set of features that should suit a broad range of use-cases of the Reports as a Service API from UKG.\n\nFor a production-ready, feature-rich solution that supports advanced use cases like support for long-running reports and executing reports with parameters, consider using RaasTastic.\n\nRun 'node-raas raastastic' or https://raastastic.com/ to learn more.\n\nNOTE: node-raas is not endorsed and not maintained by UKG.\nSupport requests for node-raas should be directed to the developer and contributors and not UKG or the UKG support team.",
+  "description": "A tiny library and CLI for interacting with the Reports as a Service - RAAS - API from UKG - Ultimate Kronos Group. This project is maintained by the team behind RaasTastic and the community. It provides a balanced set of features that should suit a broad range of use-cases of the Reports as a Service API from UKG. For a production-ready, feature-rich solution that supports advanced use cases like support for long-running reports and executing reports with parameters, consider using RaasTastic. Run 'node-raas raastastic' or https://raastastic.com/ to learn more. NOTE: node-raas is not endorsed and not maintained by UKG. Support requests for node-raas should be directed to the developer and contributors and not UKG or the UKG support team.",
   "version": "0.0.4",
   "author": "Petar Mihaylov @petarmihaylov",
   "bin": {
@@ -11,7 +11,9 @@
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@oclif/plugin-autocomplete": "^1.2.0",
     "@oclif/plugin-help": "^3",
+    "@oclif/plugin-not-found": "^2.3.1",
     "chalk": "^4.1.2",
     "cli-ux": "^5.6.3",
     "inquirer": "^8.2.0",
@@ -65,7 +67,9 @@
     },
     "bin": "node-raas",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-autocomplete",
+      "@oclif/plugin-not-found"
     ]
   },
   "repository": "petarmihaylov/node-raas",

@@ -29,10 +29,34 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
 * [`node-raas console`](#node-raas-console)
 * [`node-raas help [COMMAND]`](#node-raas-help-command)
 * [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
 * [`node-raas raastastic`](#node-raas-raastastic)
+
+## `node-raas autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ node-raas autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ node-raas autocomplete
+  $ node-raas autocomplete bash
+  $ node-raas autocomplete zsh
+  $ node-raas autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.2.0/src/commands/autocomplete/index.ts)_
 
 ## `node-raas console`
 
@@ -110,11 +134,12 @@ ARGUMENTS
 OPTIONS
   -a, --userApiKey=userApiKey
       (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
-      Security > Service Account Administration.
+      Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU > 
+      SYSTEM CONFIGURATION > Security > Web Services.
 
   -c, --customerApiKey=customerApiKey
       (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
-      Administration.
+      Administration or Web Services.
 
   -e, 
   --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
@@ -127,13 +152,15 @@ OPTIONS
 
   -l, --printCreds
       Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials 
-      should be surrounded in double-quotes.
+      should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \! in 
+      bash.)
 
   -p, --password=password
-      (required) Password for the provided username.
+      (required) Password for the provided username. Be sure to escape any special characters for your command line. (Ex: 
+      ! should be \! in bash shells.)
 
   -u, --username=username
-      (required) Username of user or service account. User is required for pulling UKG Time Management data.
+      (required) Username of user or service account. Employee User is required for pulling UKG Time Management data.
 
   -v, --verbose
       Output raw request/response combination for failing requests.
