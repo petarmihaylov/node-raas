@@ -210,9 +210,9 @@ export async function config(baseEndpoint: string): Promise<Clients> {
   // ╚═╗ │ ├┬┘├┤ ├─┤││││││││ ┬  ║  │  │├┤ │││ │   ║  │ ││││├┤ ││ ┬
   // ╚═╝ ┴ ┴└─└─┘┴ ┴┴ ┴┴┘└┘└─┘  ╚═╝┴─┘┴└─┘┘└┘ ┴   ╚═╝└─┘┘└┘└  ┴└─┘
 
-  const streaminServiceUrl = `https://${baseEndpoint}/services/BIStreamingService`;
+  const streamingServiceUrl = `https://${baseEndpoint}/services/BIStreamingService`;
   const streamClient: soap.Client = await soap.createClientAsync(
-    streaminServiceUrl,
+    streamingServiceUrl,
     {
       forceSoap12Headers: true, // Force SOAP 1.2 as required by RaaS
       escapeXML: false, // Required to ensure that when using reeport paths, the quotes for folder and report names are not escapepd
