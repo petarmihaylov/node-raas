@@ -12,6 +12,7 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 
 - [Usage](#usage)
 - [Commands](#commands)
+- [Use as a Library](#use-as-a-library)
 <!-- tocstop -->
 
 # Usage
@@ -219,6 +220,8 @@ import * as fs from 'node:fs';
   };
   const reportId =
     "/content/folder[@name='UltiPro Sample Reports']/folder[@name='Sample Reports']/folder[@name='Human Resources Reports']/report[@name='Active Employee Listing']";
+  // Alternatively use the ID from Cognos
+  // const reportId = 'storeID("iF616863582034919AB9CF4E3BC97FF34")'
   const logonResult = await logOnAction(nodeRaasClients, creds, {
     verbose: true,
   });

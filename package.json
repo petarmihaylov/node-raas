@@ -55,7 +55,9 @@
   ],
   "homepage": "https://github.com/petarmihaylov/node-raas",
   "keywords": [
-    "oclif"
+    "oclif",
+    "raas",
+    "ukg"
   ],
   "license": "MIT",
   "main": "lib/index.js",
