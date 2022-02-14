@@ -20,7 +20,7 @@ $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-@petarmihaylov/node-raas/0.0.7 darwin-x64 node-v17.3.0
+@petarmihaylov/node-raas/0.0.8 darwin-x64 node-v17.3.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -68,17 +68,16 @@ USAGE
 
 OPTIONS
   -a, --userApiKey=userApiKey
-      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > 
+      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security >
       Service Account Administration.
 
   -c, --customerApiKey=customerApiKey
-      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
       Administration.
 
-  -e, 
-  --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
-  com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol 
+  -e, --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ulti
+  pro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
+      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol
       (https://).
 
   -h, --help
@@ -100,7 +99,7 @@ EXAMPLES
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.7/src/commands/console.ts)_
+_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.8/src/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -117,7 +116,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.4/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.3.1/src/commands/help.ts)_
 
 ## `node-raas pull REPORTPATHORID`
 
@@ -133,30 +132,29 @@ ARGUMENTS
 
 OPTIONS
   -a, --userApiKey=userApiKey
-      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > 
-      Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU > 
+      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION >
+      Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU >
       SYSTEM CONFIGURATION > Security > Web Services.
 
   -c, --customerApiKey=customerApiKey
-      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account 
+      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
       Administration or Web Services.
 
-  -e, 
-  --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.
-  com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include 
+  -e, --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ulti
+  pro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
+      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include
       the protocol (https://).
 
   -h, --help
       show CLI help
 
   -l, --printCreds
-      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials 
-      should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \! in 
+      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials
+      should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \! in
       bash.)
 
   -p, --password=password
-      (required) Password for the provided username. Be sure to escape any special characters for your command line. (Ex: 
+      (required) Password for the provided username. Be sure to escape any special characters for your command line. (Ex:
       ! should be \! in bash shells.)
 
   -u, --username=username
@@ -173,7 +171,7 @@ EXAMPLES
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.7/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.8/src/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -184,5 +182,5 @@ USAGE
   $ node-raas raastastic
 ```
 
-_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.7/src/commands/raastastic.ts)_
+_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.8/src/commands/raastastic.ts)_
 <!-- commandsstop -->
