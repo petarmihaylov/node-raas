@@ -19,7 +19,7 @@ import {
   getReportParametersAction,
   logOffAction,
   logOnAction,
-  retrieveReportActon,
+  retrieveReportAction,
 } from '../lib/actions';
 
 export default class Pull extends Command {
@@ -142,7 +142,7 @@ export default class Pull extends Command {
     const executeReportResult: RaasExecuteReportCallResult =
       await executeReportAction(clients, logOnResult, reportPath, flags);
     const retrieveReportResult: RaasRetrieveReportCallResult =
-      await retrieveReportActon(clients, executeReportResult, flags);
+      await retrieveReportAction(clients, executeReportResult, flags);
     const decodedStream = decodeStream(
       retrieveReportResult.result[0].ReportStream,
     );

@@ -190,7 +190,7 @@ export async function executeReportAction(
   return executeReportResult;
 }
 
-export async function retrieveReportActon(
+export async function retrieveReportAction(
   clients: Clients,
   executeReportResult: RaasExecuteReportCallResult,
   flags: any,
