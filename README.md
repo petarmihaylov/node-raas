@@ -4,7 +4,7 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/node-raas.svg)](https://www.npmjs.com/package/@petarmihaylov/node-raas)
-[![CircleCI](https://circleci.com/gh/petarmihaylov/node-raas/tree/master.svg?style=shield)](https://circleci.com/gh/petarmihaylov/node-raas/tree/master)
+[![CircleCI](https://circleci.com/gh/petarmihaylov/node-raas/tree/master.svg?style=shield)](https://circleci.com/gh/petarmihaylov/node-raas/tree/main)
 [![Downloads/week](https://img.shields.io/npm/dw/node-raas.svg)](https://npmjs.com/package/@petarmihaylov/node-raas)
 [![License](https://img.shields.io/npm/l/node-raas.svg)](https://github.com/petarmihaylov/node-raas/blob/main/package.json)
 
@@ -192,3 +192,55 @@ USAGE
 _See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.9/src/commands/raastastic.ts)_
 
 <!-- commandsstop -->
+
+# Use as a Library
+
+```typescript
+import {
+  config as nodeRaasConfig,
+  RaasCredential,
+  logOnAction,
+  executeReportAction,
+  retrieveReportAction,
+  logOffAction,
+  decodeStream,
+  saveStream,
+  FileExportExtensions,
+} from '@petarmihaylov/node-raas';
+import * as fs from 'node:fs';
+
+(async () => {
+  const nodeRaasClients = await nodeRaasConfig('servicet.ultipro.com');
+  const creds: RaasCredential = {
+    UserName: 'service01',
+    Password: '.mc0)v4+X#R!qbimV+./OBpg0',
+    ClientAccessKey: 'V5JLA',
+    UserAccessKey: 'BB4VDK0000K0',
+  };
+  const reportId =
+    "/content/folder[@name='UltiPro Sample Reports']/folder[@name='Sample Reports']/folder[@name='Human Resources Reports']/report[@name='Active Employee Listing']";
+  const logonResult = await logOnAction(nodeRaasClients, creds, {
+    verbose: true,
+  });
+  const executeReportResult = await executeReportAction(
+    nodeRaasClients,
+    logonResult,
+    reportId,
+    {
+      verbose: false,
+    },
+  );
+  const retrieveReportResult = await retrieveReportAction(
+    nodeRaasClients,
+    executeReportResult,
+    {verbose: false},
+  );
+
+  if (!retrieveReportResult.hasErrors) {
+    const reportStream = retrieveReportResult.result[0].ReportStream;
+    const decodedStream = decodeStream(reportStream);
+    await saveStream(decodedStream, 'report', FileExportExtensions.XML);
+  }
+  await logOffAction(nodeRaasClients, logonResult, {verbose: false});
+})();
+```
