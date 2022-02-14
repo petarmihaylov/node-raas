@@ -1,20 +1,23 @@
-node-raas
-=========
+# node-raas
 
 A tiny library and CLI for interacting with the Reports as a Service (RAAS) API from UKG (Ultimate Kronos Group) to pull reports without parameters. NOTE: Not published nor supported by UKG.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/node-raas.svg)](https://npmjs.org/package/node-raas)
+[![Version](https://img.shields.io/npm/v/node-raas.svg)](https://www.npmjs.com/package/@petarmihaylov/node-raas)
 [![CircleCI](https://circleci.com/gh/petarmihaylov/node-raas/tree/master.svg?style=shield)](https://circleci.com/gh/petarmihaylov/node-raas/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/node-raas.svg)](https://npmjs.org/package/node-raas)
-[![License](https://img.shields.io/npm/l/node-raas.svg)](https://github.com/petarmihaylov/node-raas/blob/master/package.json)
+[![Downloads/week](https://img.shields.io/npm/dw/node-raas.svg)](https://npmjs.com/package/@petarmihaylov/node-raas))
+[![License](https://img.shields.io/npm/l/node-raas.svg)](https://github.com/petarmihaylov/node-raas/blob/main/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
@@ -26,14 +29,18 @@ USAGE
   $ node-raas COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
-* [`node-raas console`](#node-raas-console)
-* [`node-raas help [COMMAND]`](#node-raas-help-command)
-* [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
-* [`node-raas raastastic`](#node-raas-raastastic)
+
+- [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
+- [`node-raas console`](#node-raas-console)
+- [`node-raas help [COMMAND]`](#node-raas-help-command)
+- [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
+- [`node-raas raastastic`](#node-raas-raastastic)
 
 ## `node-raas autocomplete [SHELL]`
 
@@ -164,10 +171,10 @@ OPTIONS
       Output raw request/response combination for failing requests.
 
 EXAMPLES
-  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p 
+  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
-  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master 
-  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p 
+  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master
+  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
@@ -183,4 +190,5 @@ USAGE
 ```
 
 _See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.9/src/commands/raastastic.ts)_
+
 <!-- commandsstop -->
