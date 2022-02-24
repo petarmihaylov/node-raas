@@ -35,23 +35,27 @@ export default class Pull extends Command {
       char: 'u',
       description:
         'Username of user or service account. Employee user is required for pulling UKG Time Management data.',
+      env: 'USERNAME',
     }),
     // flag with a value (-p, --password="VALUE")
     password: flags.string({
       char: 'p',
       description: 'Password for the provided username.',
+      env: 'PASSWORD',
     }),
     // flag with a value (-c, --customer-api-key="VALUE")
     customerApiKey: flags.string({
       char: 'c',
       description:
         'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
+      env: 'CUSTOMER_API_KEY',
     }),
     // flag with a value (-a, --user-api-key="VALUE")
     userApiKey: flags.string({
       char: 'a',
       description:
         'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
+      env: 'USER_API_KEY',
     }),
     // flag with a value (-e, --base-endpoint-url="VALUE")
     baseEndpointUrl: flags.string({
@@ -69,12 +73,14 @@ export default class Pull extends Command {
       ],
       description:
         'Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol (https://).',
+      env: 'BASE_ENDPOINT_URL',
     }),
     // flag with no value (-v, --verbose)
     verbose: flags.boolean({
       char: 'v',
       description:
         'Output raw request/response combination for failing requests.',
+      env: 'VERBOSE',
     }),
     console: flags.boolean(),
   };
@@ -123,7 +129,9 @@ export default class Pull extends Command {
           type: 'confirm',
           default: true,
           when: () => {
-            return flags.password === undefined;
+            return (
+              flags.password === undefined && process.env.PASSWORD === undefined
+            );
           },
         },
         {
@@ -192,9 +200,12 @@ export default class Pull extends Command {
           type: 'confirm',
           // Ask for this when the verbosity flag is not passed endpoint was not set via a parameter
           when: () => {
-            return flags.verbose === undefined;
+            return (
+              flags.verbose === undefined && process.env.VERBOSE === undefined
+            );
           },
           default: false,
+          env: 'VERBOSE',
         },
         {
           name: 'verbose',
@@ -248,7 +259,10 @@ export default class Pull extends Command {
         name: 'reportPathOrId',
         message: 'What is the Report Path or ID?',
         type: 'input',
-        filter: (input: any) => {
+        default: process.env.REPORT_PATH_OR_ID || '',
+        validate: (input: string) =>
+          input.length > 0 ? true : 'Reort path or ID cannot be blank.',
+        filter: (input: string) => {
           return input[0] === 'i' ? `storeID("${input}")` : input;
         },
       },

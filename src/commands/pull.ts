@@ -40,6 +40,7 @@ export default class Pull extends Command {
       required: true,
       description:
         'Username of user or service account. Employee User is required for pulling UKG Time Management data.',
+      env: 'USERNAME',
     }),
     // flag with a value (-p, --password="VALUE")
     password: flags.string({
@@ -47,6 +48,7 @@ export default class Pull extends Command {
       required: true,
       description:
         'Password for the provided username. Be sure to escape any special characters for your command line. (Ex: ! should be \\! in bash shells.)',
+      env: 'PASSWORD',
     }),
     // flag with a value (-c, --customer-api-key="VALUE")
     customerApiKey: flags.string({
@@ -54,6 +56,7 @@ export default class Pull extends Command {
       required: true,
       description:
         'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration or Web Services.',
+      env: 'CUSTOMER_API_KEY',
     }),
     // flag with a value (-a, --user-api-key="VALUE")
     userApiKey: flags.string({
@@ -61,6 +64,7 @@ export default class Pull extends Command {
       required: true,
       description:
         'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services.',
+      env: 'USER_API_KEY',
     }),
     // flag with a value (-e, --base-endpoint-url="VALUE")
     baseEndpointUrl: flags.string({
@@ -79,6 +83,7 @@ export default class Pull extends Command {
       ],
       description:
         'Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol (https://).',
+      env: 'BASE_ENDPOINT_URL',
     }),
     // flag with no value (-l, --list-creds)
     printCreds: flags.boolean({
@@ -93,6 +98,7 @@ export default class Pull extends Command {
       description:
         'Output raw request/response combination for failing requests.',
       default: false,
+      env: 'VERBOSE',
     }),
   };
 
@@ -102,6 +108,7 @@ export default class Pull extends Command {
       required: true,
       description:
         'Report path or ID from Cognos (BI). Obtained by inspecting Properties of a BI report. (Right-click > Properties > General > Advanced > [Search path | ID].)',
+      default: process.env.REPORT_PATH_OR_ID,
     },
   ];
 

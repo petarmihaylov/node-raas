@@ -9,39 +9,37 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 [![License](https://img.shields.io/npm/l/node-raas.svg)](https://github.com/petarmihaylov/node-raas/blob/main/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
-- [Use as a Library](#use-as-a-library)
+* [node-raas](#node-raas)
+* [Usage](#usage)
+* [Commands](#commands)
+* [Use as a Library](#use-as-a-library)
+* [Support for ENV variables and .env File](#support-for-env-variables-and-env-file)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-@petarmihaylov/node-raas/0.0.9 darwin-x64 node-v17.3.0
+@petarmihaylov/node-raas/0.0.10 darwin-x64 node-v17.3.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
-- [`node-raas console`](#node-raas-console)
-- [`node-raas help [COMMAND]`](#node-raas-help-command)
-- [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
-- [`node-raas raastastic`](#node-raas-raastastic)
+* [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
+* [`node-raas console`](#node-raas-console)
+* [`node-raas help [COMMAND]`](#node-raas-help-command)
+* [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
+* [`node-raas raastastic`](#node-raas-raastastic)
 
 ## `node-raas autocomplete [SHELL]`
 
@@ -107,7 +105,7 @@ EXAMPLES
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.9/src/commands/console.ts)_
+_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.10/src/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -135,8 +133,9 @@ USAGE
   $ node-raas pull REPORTPATHORID
 
 ARGUMENTS
-  REPORTPATHORID  Report path or ID from Cognos (BI). Obtained by inspecting Properties of a BI report. (Right-click >
-                  Properties > General > Advanced > [Search path | ID].)
+  REPORTPATHORID  [default: i7095DAFD512F4104B9EC1F2F5803A8BB] Report path or ID from Cognos (BI). Obtained by
+                  inspecting Properties of a BI report. (Right-click > Properties > General > Advanced > [Search path |
+                  ID].)
 
 OPTIONS
   -a, --userApiKey=userApiKey
@@ -172,14 +171,14 @@ OPTIONS
       Output raw request/response combination for failing requests.
 
 EXAMPLES
-  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p
+  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p 
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
-  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master
-  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p
+  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master 
+  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p 
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.9/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.10/src/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -190,8 +189,7 @@ USAGE
   $ node-raas raastastic
 ```
 
-_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.9/src/commands/raastastic.ts)_
-
+_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.10/src/commands/raastastic.ts)_
 <!-- commandsstop -->
 
 # Use as a Library
@@ -247,3 +245,9 @@ import * as fs from 'node:fs';
   await logOffAction(nodeRaasClients, logonResult, {verbose: false});
 })();
 ```
+
+# Support for ENV variables and .env File
+
+`node-raas` supports environmental variables. These can be set in an `.env` file placed alongside the `node-raas` executable, defined inline before calling `node-raas` or through a nother method - as long as they are available in your environment before `node-raas` is called.
+
+`node-raas` uses the [dotenv](https://www.npmjs.com/package/dotenv) package with the default options. This means that if any of the variables in your `.env` file already exist in your environment, they will **not** be overridden. In such instances, you can call `node-rass` with the appropriate flags as they take precedence over Environmental Variable values.
