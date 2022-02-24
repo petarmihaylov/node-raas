@@ -219,6 +219,8 @@ export async function config(baseEndpoint: string): Promise<Clients> {
     },
   );
   streamClient.addHttpHeader('Content-Type', 'application/soap+xml');
+  streamClient.wsdl.xmlnsInEnvelope +=
+    ' xmlns:h="http://www.ultipro.com/dataservices/bistream/2"';
 
   return {
     executeClient,
@@ -440,8 +442,6 @@ export async function retrieveReport(
   addAddressingHeader(clients.streamClient);
   addActionHeader(clients, RaasMethods.RetrieveReport);
 
-  clients.streamClient.wsdl.xmlnsInEnvelope +=
-    ' xmlns:h="http://www.ultipro.com/dataservices/bistream/2"';
   clients.streamClient.addSoapHeader({
     'h:ReportKey': executeReportResult.ReportKey,
   });
