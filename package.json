@@ -66,7 +66,7 @@
   "oclif": {
     "commands": "./lib/commands",
     "macos": {
-      "identifier": "com.node-raas.command"
+      "identifier": "com.node-raas.cli"
     },
     "bin": "node-raas",
     "plugins": [
