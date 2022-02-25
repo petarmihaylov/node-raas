@@ -1,7 +1,7 @@
 {
   "name": "@petarmihaylov/node-raas",
   "description": "A tiny library and CLI for interacting with the Reports as a Service - RAAS - API from UKG - Ultimate Kronos Group. This project is maintained by the team behind RaasTastic and the community. It provides a balanced set of features that should suit a broad range of use-cases of the Reports as a Service API from UKG. For a production-ready, feature-rich solution that supports advanced use cases like support for long-running reports and executing reports with parameters, consider using RaasTastic. Run 'node-raas raastastic' or https://raastastic.com/ to learn more. NOTE: node-raas is not endorsed and not maintained by UKG. Support requests for node-raas should be directed to the developer and contributors and not UKG or the UKG support team.",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "author": "Petar Mihaylov @petarmihaylov",
   "bin": {
     "node-raas": "./bin/run"
