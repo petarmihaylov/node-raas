@@ -24,7 +24,7 @@ $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-@petarmihaylov/node-raas/0.0.13 darwin-x64 node-v17.3.0
+@petarmihaylov/node-raas/0.0.13 darwin-x64 node-v16.14.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
