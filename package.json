@@ -72,7 +72,8 @@
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-autocomplete",
-      "@oclif/plugin-not-found"
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-update"
     ],
     "update": {
       "s3": {
