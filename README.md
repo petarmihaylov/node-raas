@@ -24,7 +24,7 @@ $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (-v|--version|version)
-@petarmihaylov/node-raas/0.0.14 darwin-x64 node-v16.14.0
+@petarmihaylov/node-raas/0.0.15 darwin-x64 node-v16.14.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -105,7 +105,7 @@ EXAMPLES
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.14/src/commands/console.ts)_
+_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.15/src/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -133,7 +133,7 @@ USAGE
   $ node-raas pull REPORTPATHORID
 
 ARGUMENTS
-  REPORTPATHORID  [default: i7095DAFD512F4104B9EC1F2F5803A8BB] Report path or ID from Cognos (BI). Obtained by
+  REPORTPATHORID  [default: i27E9BC4D04E044479B64D5B9A05CD1CC] Report path or ID from Cognos (BI). Obtained by
                   inspecting Properties of a BI report. (Right-click > Properties > General > Advanced > [Search path |
                   ID].)
 
@@ -178,7 +178,7 @@ EXAMPLES
   "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.14/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.15/src/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -189,7 +189,7 @@ USAGE
   $ node-raas raastastic
 ```
 
-_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.14/src/commands/raastastic.ts)_
+_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.15/src/commands/raastastic.ts)_
 <!-- commandsstop -->
 
 # Use as a Library
