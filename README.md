@@ -23,8 +23,8 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
-$ node-raas (-v|--version|version)
-@petarmihaylov/node-raas/0.0.16 darwin-x64 node-v16.14.0
+$ node-raas (--version)
+@petarmihaylov/node-raas/0.0.17 darwin-x64 node-v16.14.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -48,18 +48,24 @@ display autocomplete installation instructions
 
 ```
 USAGE
-  $ node-raas autocomplete [SHELL]
+  $ node-raas autocomplete [SHELL] [-r]
 
 ARGUMENTS
   SHELL  shell type
 
-OPTIONS
+FLAGS
   -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+DESCRIPTION
+  display autocomplete installation instructions
 
 EXAMPLES
   $ node-raas autocomplete
+
   $ node-raas autocomplete bash
+
   $ node-raas autocomplete zsh
+
   $ node-raas autocomplete --refresh-cache
 ```
 
@@ -71,42 +77,38 @@ Quickly test reports and access with this interactive console pulling data from 
 
 ```
 USAGE
-  $ node-raas console
+  $ node-raas console [-h] [-u <value>] [-p <value>] [-c <value>] [-a <value>] [-e
+    servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.com|rental2.ulti
+    pro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com] [-v] [--console]
 
-OPTIONS
-  -a, --userApiKey=userApiKey
-      A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security >
-      Service Account Administration.
-
-  -c, --customerApiKey=customerApiKey
-      A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
-      Administration.
-
-  -e, --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ulti
-  pro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include the protocol
-      (https://).
-
-  -h, --help
-      show CLI help
-
-  -p, --password=password
-      Password for the provided username.
-
-  -u, --username=username
-      Username of user or service account. Employee user is required for pulling UKG Time Management data.
-
-  -v, --verbose
-      Output raw request/response combination for failing requests.
-
+FLAGS
+  -a, --userApiKey=<value>        A 12-character alpha-numeric key for the provided username from UKG Pro > MENU >
+                                  SYSTEM CONFIGURATION > Security > Service Account Administration.
+  -c, --customerApiKey=<value>    A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security
+                                  > Service Account Administration.
+  -e, --baseEndpointUrl=<option>  Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web
+                                  Services. Do not include the protocol (https://).
+                                  <options: servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultip
+                                  ro.com|service5.ultipro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com
+                                  |rental5.ultipro.com>
+  -h, --help                      Show CLI help.
+  -p, --password=<value>          Password for the provided username.
+  -u, --username=<value>          Username of user or service account. Employee user is required for pulling UKG Time
+                                  Management data.
+  -v, --verbose                   Output raw request/response combination for failing requests.
   --console
+
+DESCRIPTION
+  Quickly test reports and access with this interactive console pulling data from a BI report through Reports as a
+  Service (RAAS).
 
 EXAMPLES
   $ node-raas console
+
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.16/src/commands/console.ts)_
+_See code: [dist/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -114,13 +116,16 @@ display help for node-raas
 
 ```
 USAGE
-  $ node-raas help [COMMAND]
+  $ node-raas help [COMMAND] [--all]
 
 ARGUMENTS
   COMMAND  command to show help for
 
-OPTIONS
+FLAGS
   --all  see all commands in CLI
+
+DESCRIPTION
+  display help for node-raas
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.3.1/src/commands/help.ts)_
@@ -131,55 +136,47 @@ Pull data from a BI report through Reports as a Service (RAAS).
 
 ```
 USAGE
-  $ node-raas pull REPORTPATHORID
+  $ node-raas pull [REPORTPATHORID] -u <value> -p <value> -c <value> -a <value> -e
+    servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ultipro.com|rental2.ulti
+    pro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com [-h] [-l] [-v]
 
 ARGUMENTS
-  REPORTPATHORID  [default: i27E9BC4D04E044479B64D5B9A05CD1CC] Report path or ID from Cognos (BI). Obtained by
+  REPORTPATHORID  [default: i7095DAFD512F4104B9EC1F2F5803A8BB] Report path or ID from Cognos (BI). Obtained by
                   inspecting Properties of a BI report. (Right-click > Properties > General > Advanced > [Search path |
                   ID].)
 
-OPTIONS
-  -a, --userApiKey=userApiKey
-      (required) A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION >
-      Security > Service Account Administration. If using an Employee User use the User API Key from UKG Pro > MENU >
-      SYSTEM CONFIGURATION > Security > Web Services.
+FLAGS
+  -a, --userApiKey=<value>        (required) A 12-character alpha-numeric key for the provided username from UKG Pro >
+                                  MENU > SYSTEM CONFIGURATION > Security > Service Account Administration. If using an
+                                  Employee User use the User API Key from UKG Pro > MENU > SYSTEM CONFIGURATION >
+                                  Security > Web Services.
+  -c, --customerApiKey=<value>    (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION
+                                  > Security > Service Account Administration or Web Services.
+  -e, --baseEndpointUrl=<option>  (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security >
+                                  Web Services. Do not include the protocol (https://).
+                                  <options: servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultip
+                                  ro.com|service5.ultipro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com
+                                  |rental5.ultipro.com>
+  -h, --help                      Show CLI help.
+  -l, --printCreds                Print the credentials. Useful when ensuring flag input is processed correctly. As a
+                                  best practice, credentials should be surrounded in double-quotes and any special
+                                  characters for your conssole escaped. (Ex: ! should be \! in bash.)
+  -p, --password=<value>          (required) Password for the provided username. Be sure to escape any special
+                                  characters for your command line. (Ex: ! should be \! in bash shells.)
+  -u, --username=<value>          (required) Username of user or service account. Employee User is required for pulling
+                                  UKG Time Management data.
+  -v, --verbose                   Output raw request/response combination for failing requests.
 
-  -c, --customerApiKey=customerApiKey
-      (required) A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account
-      Administration or Web Services.
-
-  -e, --baseEndpointUrl=servicet.ultipro.com|service2.ultipro.com|service3.ultipro.ca|service4.ultipro.com|service5.ulti
-  pro.com|rental2.ultipro.com|rental3.ultipro.ca|rental4.ultipro.com|rental5.ultipro.com
-      (required) Base endpoint URL from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Web Services. Do not include
-      the protocol (https://).
-
-  -h, --help
-      show CLI help
-
-  -l, --printCreds
-      Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials
-      should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \! in
-      bash.)
-
-  -p, --password=password
-      (required) Password for the provided username. Be sure to escape any special characters for your command line. (Ex:
-      ! should be \! in bash shells.)
-
-  -u, --username=username
-      (required) Username of user or service account. Employee User is required for pulling UKG Time Management data.
-
-  -v, --verbose
-      Output raw request/response combination for failing requests.
+DESCRIPTION
+  Pull data from a BI report through Reports as a Service (RAAS).
 
 EXAMPLES
-  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p 
-  "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
-  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master 
-  SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p 
-  "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
+  $ node-raas pull "i22500177CDE54018AC31713BEBE2F644" -u ServiceAccount -p "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
+
+  $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.16/src/commands/pull.ts)_
+_See code: [dist/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -188,9 +185,12 @@ Displays information about RaasTastic - a production-ready, feature-rich set of 
 ```
 USAGE
   $ node-raas raastastic
+
+DESCRIPTION
+  Displays information about RaasTastic - a production-ready, feature-rich set of tools built on top of node-raas.
 ```
 
-_See code: [src/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.16/src/commands/raastastic.ts)_
+_See code: [dist/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/raastastic.ts)_
 
 ## `node-raas update [CHANNEL]`
 
@@ -198,19 +198,33 @@ update the node-raas CLI
 
 ```
 USAGE
-  $ node-raas update [CHANNEL]
+  $ node-raas update [CHANNEL] [-a] [-v <value> | -i] [--force]
 
-OPTIONS
+FLAGS
   -a, --available        Install a specific version.
   -i, --interactive      Interactively select version to install. This is ignored if a channel is provided.
-  -v, --version=version  Install a specific version.
+  -v, --version=<value>  Install a specific version.
   --force                Force a re-download of the requested version.
 
+DESCRIPTION
+  update the node-raas CLI
+
 EXAMPLES
-  [object Object]
-  [object Object]
-  [object Object]
-  [object Object]
+  Update to the stable channel:
+
+    $ node-raas update stable
+
+  Update to a specific version:
+
+    $ node-raas update --version 1.0.0
+
+  Interactively select version:
+
+    $ node-raas update --interactive
+
+  See available versions:
+
+    $ node-raas update --available
 ```
 
 _See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.0/src/commands/update.ts)_
