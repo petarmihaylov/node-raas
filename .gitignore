@@ -11,3 +11,4 @@ export.xml
 .DS_Store
 tsconfig.tsbuildinfo
 .env
+oclif.manifest.json
