@@ -24,7 +24,7 @@ $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
 running command...
 $ node-raas (--version)
-@petarmihaylov/node-raas/0.0.17 darwin-x64 node-v16.14.0
+@petarmihaylov/node-raas/0.0.18 darwin-x64 node-v16.14.0
 $ node-raas --help [COMMAND]
 USAGE
   $ node-raas COMMAND
@@ -108,7 +108,7 @@ EXAMPLES
   $ node-raas console -e rental4.ultipro.com
 ```
 
-_See code: [dist/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/console.ts)_
+_See code: [dist/commands/console.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.18/dist/commands/console.ts)_
 
 ## `node-raas help [COMMAND]`
 
@@ -176,7 +176,7 @@ EXAMPLES
   $ node-raas pull "/content/folder[@name='zzzCompany Folders']/folder[@name='Eastwood Industries - Master SC(72)']/folder[@name='UltiPro']/folder[@name='Customs']/report[@name='Audit Report 2']" -u ServiceAccount -p "u(3Unv0ERjlaksdjf*jfa89wfjklj23j!@3j423j#OI@^j2342" -c B5JLX -a BB7VDK0000K0 -e rental4.ultipro.com
 ```
 
-_See code: [dist/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/pull.ts)_
+_See code: [dist/commands/pull.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.18/dist/commands/pull.ts)_
 
 ## `node-raas raastastic`
 
@@ -190,7 +190,7 @@ DESCRIPTION
   Displays information about RaasTastic - a production-ready, feature-rich set of tools built on top of node-raas.
 ```
 
-_See code: [dist/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.17/dist/commands/raastastic.ts)_
+_See code: [dist/commands/raastastic.ts](https://github.com/petarmihaylov/node-raas/blob/v0.0.18/dist/commands/raastastic.ts)_
 
 ## `node-raas update [CHANNEL]`
 
