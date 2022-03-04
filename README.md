@@ -9,24 +9,16 @@ A tiny library and CLI for interacting with the Reports as a Service (RAAS) API 
 [![License](https://img.shields.io/npm/l/node-raas.svg)](https://github.com/petarmihaylov/node-raas/blob/main/package.json)
 
 <!-- toc -->
-
-- [node-raas](#node-raas)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
-  - [`node-raas console`](#node-raas-console)
-  - [`node-raas help [COMMAND]`](#node-raas-help-command)
-  - [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
-  - [`node-raas raastastic`](#node-raas-raastastic)
-  - [`node-raas update [CHANNEL]`](#node-raas-update-channel)
-- [Use as a Library](#use-as-a-library)
-- [Support for ENV variables and .env File](#support-for-env-variables-and-env-file)
+* [node-raas](#node-raas)
+* [Usage](#usage)
+* [Commands](#commands)
+* [Use as a Library](#use-as-a-library)
+* [Support for ENV variables and .env File](#support-for-env-variables-and-env-file)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @petarmihaylov/node-raas
 $ node-raas COMMAND
@@ -38,19 +30,17 @@ USAGE
   $ node-raas COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
-- [`node-raas console`](#node-raas-console)
-- [`node-raas help [COMMAND]`](#node-raas-help-command)
-- [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
-- [`node-raas raastastic`](#node-raas-raastastic)
-- [`node-raas update [CHANNEL]`](#node-raas-update-channel)
+* [`node-raas autocomplete [SHELL]`](#node-raas-autocomplete-shell)
+* [`node-raas console`](#node-raas-console)
+* [`node-raas help [COMMAND]`](#node-raas-help-command)
+* [`node-raas pull REPORTPATHORID`](#node-raas-pull-reportpathorid)
+* [`node-raas raastastic`](#node-raas-raastastic)
+* [`node-raas update [CHANNEL]`](#node-raas-update-channel)
 
 ## `node-raas autocomplete [SHELL]`
 
@@ -238,7 +228,6 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.0/src/commands/update.ts)_
-
 <!-- commandsstop -->
 
 # Use as a Library
