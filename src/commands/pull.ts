@@ -1,4 +1,4 @@
-import {Command, flags} from '@oclif/command';
+import {Command, Flags} from '@oclif/core'
 import {
   Clients,
   config,
@@ -6,21 +6,21 @@ import {
   RaasExecuteReportCallResult,
   RaasLogOnCallResult,
   RaasRetrieveReportCallResult,
-} from '../lib/core-raas';
-import chalk from 'chalk';
+} from '../lib/core-raas'
+import chalk from 'chalk'
 import {
   blueMagenta,
   decodeStream,
   FileExportExtensions,
   saveStream,
-} from '../utils/formatters';
+} from '../utils/formatters'
 import {
   executeReportAction,
   getReportParametersAction,
   logOffAction,
   logOnAction,
   retrieveReportAction,
-} from '../lib/actions';
+} from '../lib/actions'
 
 export default class Pull extends Command {
   static description =
@@ -33,9 +33,9 @@ export default class Pull extends Command {
 
   static flags = {
     // flag with no value (-h, --help)
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
     // flag with a value (-u, --username="VALUE")
-    username: flags.string({
+    username: Flags.string({
       char: 'u',
       required: true,
       description:
@@ -43,7 +43,7 @@ export default class Pull extends Command {
       env: 'USERNAME',
     }),
     // flag with a value (-p, --password="VALUE")
-    password: flags.string({
+    password: Flags.string({
       char: 'p',
       required: true,
       description:
@@ -51,7 +51,7 @@ export default class Pull extends Command {
       env: 'PASSWORD',
     }),
     // flag with a value (-c, --customer-api-key="VALUE")
-    customerApiKey: flags.string({
+    customerApiKey: Flags.string({
       char: 'c',
       required: true,
       description:
@@ -59,7 +59,7 @@ export default class Pull extends Command {
       env: 'CUSTOMER_API_KEY',
     }),
     // flag with a value (-a, --user-api-key="VALUE")
-    userApiKey: flags.string({
+    userApiKey: Flags.string({
       char: 'a',
       required: true,
       description:
@@ -67,7 +67,7 @@ export default class Pull extends Command {
       env: 'USER_API_KEY',
     }),
     // flag with a value (-e, --base-endpoint-url="VALUE")
-    baseEndpointUrl: flags.string({
+    baseEndpointUrl: Flags.string({
       char: 'e',
       required: true,
       options: [
@@ -86,14 +86,14 @@ export default class Pull extends Command {
       env: 'BASE_ENDPOINT_URL',
     }),
     // flag with no value (-l, --list-creds)
-    printCreds: flags.boolean({
+    printCreds: Flags.boolean({
       char: 'l',
       description:
         'Print the credentials. Useful when ensuring flag input is processed correctly. As a best practice, credentials should be surrounded in double-quotes and any special characters for your conssole escaped. (Ex: ! should be \\! in bash.)',
       default: false,
     }),
     // flag with no value (-v, --verbose)
-    verbose: flags.boolean({
+    verbose: Flags.boolean({
       char: 'v',
       description:
         'Output raw request/response combination for failing requests.',
@@ -112,48 +112,48 @@ export default class Pull extends Command {
     },
   ];
 
-  async run() {
-    const {args, flags} = this.parse(Pull);
+  async run(): Promise<void> {
+    const {args, flags} = await this.parse(Pull)
 
     const reportPath =
-      args.reportPathOrId[0] === 'i'
-        ? `storeID("${args.reportPathOrId}")`
-        : args.reportPathOrId;
+      args.reportPathOrId[0] === 'i' ?
+        `storeID("${args.reportPathOrId}")` :
+        args.reportPathOrId
 
     const raasCredential: RaasCredential = {
       UserName: flags.username,
       Password: flags.password,
       ClientAccessKey: flags.customerApiKey,
       UserAccessKey: flags.userApiKey,
-    };
-    this.log(chalk.blue('Starting a report pull...'));
-    this.log(blueMagenta('Report Path/ID:', reportPath));
+    }
+    this.log(chalk.blue('Starting a report pull...'))
+    this.log(blueMagenta('Report Path/ID:', reportPath))
 
     if (flags.printCreds) {
-      this.log(blueMagenta('Username:', flags.username));
-      this.log(blueMagenta('Password:', flags.password));
-      this.log(blueMagenta('Customer API Key:', flags.customerApiKey));
-      this.log(blueMagenta('User API Key:', flags.userApiKey));
-      this.log(blueMagenta('Base Endpoint URL:', flags.baseEndpointUrl));
+      this.log(blueMagenta('Username:', flags.username))
+      this.log(blueMagenta('Password:', flags.password))
+      this.log(blueMagenta('Customer API Key:', flags.customerApiKey))
+      this.log(blueMagenta('User API Key:', flags.userApiKey))
+      this.log(blueMagenta('Base Endpoint URL:', flags.baseEndpointUrl))
     }
 
     // Set up the SOAP clients
-    const clients: Clients = await config(flags.baseEndpointUrl);
+    const clients: Clients = await config(flags.baseEndpointUrl)
 
     const logOnResult: RaasLogOnCallResult = await logOnAction(
       clients,
       raasCredential,
       flags,
-    );
-    await getReportParametersAction(clients, logOnResult, reportPath, flags);
+    )
+    await getReportParametersAction(clients, logOnResult, reportPath, flags)
     const executeReportResult: RaasExecuteReportCallResult =
-      await executeReportAction(clients, logOnResult, reportPath, flags);
+      await executeReportAction(clients, logOnResult, reportPath, flags)
     const retrieveReportResult: RaasRetrieveReportCallResult =
-      await retrieveReportAction(clients, executeReportResult, flags);
+      await retrieveReportAction(clients, executeReportResult, flags)
     const decodedStream = decodeStream(
       retrieveReportResult.result[0].ReportStream,
-    );
-    await saveStream(decodedStream, 'export', FileExportExtensions.XML);
-    await logOffAction(clients, logOnResult, flags);
+    )
+    await saveStream(decodedStream, 'export', FileExportExtensions.XML)
+    await logOffAction(clients, logOnResult, flags)
   }
 }

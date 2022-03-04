@@ -1,27 +1,27 @@
-import chalk from 'chalk';
-import {RaasRetrieveReportCallResult} from './core-raas';
+import chalk from 'chalk'
+import {RaasRetrieveReportCallResult} from './core-raas'
 
 export const upgradeSuggestion = `
 For a production-ready, feature-rich solution, consider using ${chalk.green(
-  'RaasTastic',
-)}.
+    'RaasTastic',
+  )}.
 
 Run 'node-raas raastastic' or visit ${chalk.green(
-  'https://raastastic.io/',
-)} to learn more.`;
+    'https://raastastic.io/',
+  )} to learn more.`
 
 export const extendedUpgradeSuggestion = `${upgradeSuggestion}
 
 ${chalk.green(
-  'RaasTastic',
-)} is currently in development and is being built on top of our node-raas CLI to
+    'RaasTastic',
+  )} is currently in development and is being built on top of our node-raas CLI to
 provide advanced functionality through the ${chalk.green(
-  'RaasTastic',
-)} CLI and ${chalk.green('RaasTastic')} REST API Server.
+    'RaasTastic',
+  )} CLI and ${chalk.green('RaasTastic')} REST API Server.
 
 Below are some (but not all) of the ${chalk.green(
-  'RaasTastic',
-)} planned features.
+    'RaasTastic',
+  )} planned features.
 
 ${chalk.green('RaasTastic')} CLI:
 * Retrive long running repots
@@ -42,9 +42,9 @@ ${chalk.green('RaasTastic')} REST API Server:
 
 Stay up to date with the development progress and register for the upcoming
 private Beta for early adopters by visiting ${chalk.green(
-  'RaasTastic',
-)} https://raastastic.io/updates.
-`;
+    'RaasTastic',
+  )} https://raastastic.io/updates.
+`
 
 export const biDataServiceErrors = [
   {
@@ -95,7 +95,7 @@ export const biDataServiceErrors = [
     * Using a service account to run a BI report pulling data using the Time Management package.
       For such reports, an employee user account must be used.`,
   },
-];
+]
 
 export const biStreamingServiceErrors = [
   {
@@ -115,7 +115,7 @@ export const biStreamingServiceErrors = [
     suggestions:
       'The requested ReportKey is invalid. This error should not occur under an official, unmodified node-raas release.',
   },
-];
+]
 
 export const notSupported = {
   reportWithRequiredParemeters: `This report uses required parameters. Submitting parameters is not supported in node-raas and attempting to run a report with a required parameter will fail.
@@ -126,7 +126,7 @@ the initial call to the RetrieveReport method are not supported by node-raas.
 Such reports require additional logic to facilitate retry calls to RetrieveReport.
 
 ${upgradeSuggestion}`,
-};
+}
 
 // Used for LogOn and ExecuteReport errors
 export function handleBiDataServiceErrors(
@@ -134,100 +134,100 @@ export function handleBiDataServiceErrors(
   errorNode: string,
   verbose: boolean,
 ): void {
-  let identifiedError: {message: string; suggestions: string}[] = [];
+  let identifiedError: {message: string; suggestions: string}[] = []
 
-  const action = errorNode.slice(0, -6);
+  const action = errorNode.slice(0, -6)
 
   try {
-    identifiedError = biDataServiceErrors.filter((e) => {
-      return e.message === obj.result[0][errorNode].StatusMessage;
-    });
+    identifiedError = biDataServiceErrors.filter(e => {
+      return e.message === obj.result[0][errorNode].StatusMessage
+    })
   } catch {
-    throw new Error('Invalid errorNode parameter.');
+    throw new Error('Invalid errorNode parameter.')
   }
 
   // If the error is not defined, push the default error
   if (identifiedError.length === 0)
-    identifiedError.push(biDataServiceErrors[0]);
+    identifiedError.push(biDataServiceErrors[0])
 
-  const error = verbose
-    ? new Error(`
+  const error = verbose ?
+    new Error(`
 ${chalk.blue(`${action}:`)} ${chalk.red('Failed')}
 ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(obj.correlationId)}
 ${chalk.blue(`${errorNode}:`)} ${chalk.red(
-        JSON.stringify(obj.result[0][errorNode], undefined, 2),
-      )}
+  JSON.stringify(obj.result[0][errorNode], undefined, 2),
+)}
 ${chalk.blue('SOAP Request Headers:')} ${chalk.red(
-        JSON.stringify(obj.result[2], undefined, 2),
-      )}
+  JSON.stringify(obj.result[2], undefined, 2),
+)}
 ${chalk.blue('Raw XML Request:')} ${chalk.red(
-        JSON.stringify(obj.result[3], undefined, 2),
-      )}
+  JSON.stringify(obj.result[3], undefined, 2),
+)}
 ${chalk.blue('Raw XML Response:')} ${chalk.red(
-        JSON.stringify(obj.result[1], undefined, 2),
-      )}
+  JSON.stringify(obj.result[1], undefined, 2),
+)}
 Troubleshooting suggestions:
-${chalk.yellow(identifiedError[0].suggestions)}`)
-    : new Error(
-        `\n  ${chalk.blue(`${action}:`)} ${chalk.red(
-          'Failed',
-        )} \n  ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(
-          obj.correlationId,
-        )} \n  ${chalk.red(
-          JSON.stringify(obj.result[0], undefined, 2),
-        )} \n Troubleshooting suggestions: ${chalk.yellow(
-          identifiedError[0].suggestions,
-        )}`,
-      );
-  throw error;
+${chalk.yellow(identifiedError[0].suggestions)}`) :
+    new Error(
+      `\n  ${chalk.blue(`${action}:`)} ${chalk.red(
+        'Failed',
+      )} \n  ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(
+        obj.correlationId,
+      )} \n  ${chalk.red(
+        JSON.stringify(obj.result[0], undefined, 2),
+      )} \n Troubleshooting suggestions: ${chalk.yellow(
+        identifiedError[0].suggestions,
+      )}`,
+    )
+  throw error
 }
 
 export function handleBiStreamingServiceErrors(
   obj: RaasRetrieveReportCallResult,
   verbose: boolean,
 ): void {
-  let identifiedError: {message: string; suggestions: string}[] = [];
+  let identifiedError: {message: string; suggestions: string}[] = []
 
   try {
-    identifiedError = biStreamingServiceErrors.filter((e) => {
-      return e.message === obj.result[2].StatusMessage;
-    });
+    identifiedError = biStreamingServiceErrors.filter(e => {
+      return e.message === obj.result[2].StatusMessage
+    })
   } catch {
-    throw new Error('Invalid errorNode parameter.');
+    throw new Error('Invalid errorNode parameter.')
   }
 
   // If the error is not defined, push the default error
   if (identifiedError.length === 0)
-    identifiedError.push(biStreamingServiceErrors[0]);
+    identifiedError.push(biStreamingServiceErrors[0])
 
-  const error = verbose
-    ? new Error(`
+  const error = verbose ?
+    new Error(`
 ${chalk.blue('RetrieveReport:')} ${chalk.red('Failed')}
 ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(obj.correlationId)}
 ${chalk.blue('ReportStream:')} ${chalk.red(
-        JSON.stringify(obj.result[0].ReportStream, undefined, 2),
-      )}
+  JSON.stringify(obj.result[0].ReportStream, undefined, 2),
+)}
 ${chalk.blue('SOAP Request Headers:')} ${chalk.red(
-        JSON.stringify(obj.result[2], undefined, 2),
-      )}
+  JSON.stringify(obj.result[2], undefined, 2),
+)}
 ${chalk.blue('Raw XML Request:')} ${chalk.red(
-        JSON.stringify(obj.result[3], undefined, 2),
-      )}
+  JSON.stringify(obj.result[3], undefined, 2),
+)}
 ${chalk.blue('Raw XML Response:')} ${chalk.red(
-        JSON.stringify(obj.result[1], undefined, 2),
-      )}
+  JSON.stringify(obj.result[1], undefined, 2),
+)}
 Troubleshooting suggestions:
-${chalk.yellow(identifiedError[0].suggestions)}`)
-    : new Error(
-        `\n  ${chalk.blue('RetrieveReport:')} ${chalk.red(
-          'Failed',
-        )} \n  ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(
-          obj.correlationId,
-        )} \n  ${chalk.red(
-          JSON.stringify(obj.result[0], undefined, 2),
-        )} \n Troubleshooting suggestions: ${chalk.yellow(
-          identifiedError[0].suggestions,
-        )}`,
-      );
-  throw error;
+${chalk.yellow(identifiedError[0].suggestions)}`) :
+    new Error(
+      `\n  ${chalk.blue('RetrieveReport:')} ${chalk.red(
+        'Failed',
+      )} \n  ${chalk.blue('US-CORRELATION-ID:')} ${chalk.magenta(
+        obj.correlationId,
+      )} \n  ${chalk.red(
+        JSON.stringify(obj.result[0], undefined, 2),
+      )} \n Troubleshooting suggestions: ${chalk.yellow(
+        identifiedError[0].suggestions,
+      )}`,
+    )
+  throw error
 }

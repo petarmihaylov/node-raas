@@ -1,4 +1,4 @@
-import {Command, flags} from '@oclif/command';
+import {Command, Flags} from '@oclif/core';
 import chalk from 'chalk';
 import * as inquirer from 'inquirer';
 import {
@@ -29,36 +29,36 @@ export default class Pull extends Command {
 
   static flags = {
     // flag with no value (-h, --help)
-    help: flags.help({char: 'h'}),
+    help: Flags.help({char: 'h'}),
     // flag with a value (-u, --username="VALUE")
-    username: flags.string({
+    username: Flags.string({
       char: 'u',
       description:
         'Username of user or service account. Employee user is required for pulling UKG Time Management data.',
       env: 'USERNAME',
     }),
     // flag with a value (-p, --password="VALUE")
-    password: flags.string({
+    password: Flags.string({
       char: 'p',
       description: 'Password for the provided username.',
       env: 'PASSWORD',
     }),
     // flag with a value (-c, --customer-api-key="VALUE")
-    customerApiKey: flags.string({
+    customerApiKey: Flags.string({
       char: 'c',
       description:
         'A 5-character alpha-numeric key from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
       env: 'CUSTOMER_API_KEY',
     }),
     // flag with a value (-a, --user-api-key="VALUE")
-    userApiKey: flags.string({
+    userApiKey: Flags.string({
       char: 'a',
       description:
         'A 12-character alpha-numeric key for the provided username from UKG Pro > MENU > SYSTEM CONFIGURATION > Security > Service Account Administration.',
       env: 'USER_API_KEY',
     }),
     // flag with a value (-e, --base-endpoint-url="VALUE")
-    baseEndpointUrl: flags.string({
+    baseEndpointUrl: Flags.string({
       char: 'e',
       options: [
         'servicet.ultipro.com',
@@ -76,17 +76,17 @@ export default class Pull extends Command {
       env: 'BASE_ENDPOINT_URL',
     }),
     // flag with no value (-v, --verbose)
-    verbose: flags.boolean({
+    verbose: Flags.boolean({
       char: 'v',
       description:
         'Output raw request/response combination for failing requests.',
       env: 'VERBOSE',
     }),
-    console: flags.boolean(),
+    console: Flags.boolean(),
   };
 
-  async run() {
-    const {flags} = this.parse(Pull);
+  async run(): Promise<void> {
+    const {flags} = await this.parse(Pull);
 
     let responses: any = {};
 
