@@ -140,11 +140,14 @@ export default class Pull extends Command {
     // Set up the SOAP clients
     const clients: Clients = await config(flags.baseEndpointUrl)
 
+    // console.log(clients);
+    // console.log(raasCredential);
+
     const logOnResult: RaasLogOnCallResult = await logOnAction(
       clients,
       raasCredential,
       flags,
-    )
+    ).catch((error: any) => {console.log(error)});
     await getReportParametersAction(clients, logOnResult, reportPath, flags)
     const executeReportResult: RaasExecuteReportCallResult =
       await executeReportAction(clients, logOnResult, reportPath, flags)

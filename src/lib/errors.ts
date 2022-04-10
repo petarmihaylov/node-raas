@@ -3,47 +3,28 @@ import {RaasRetrieveReportCallResult} from './core-raas';
 
 export const upgradeSuggestion = `
 For a production-ready, feature-rich solution, consider using ${chalk.green(
-  'RaasTastic',
+  'Ubirr',
 )}.
 
-Run 'node-raas raastastic' or visit ${chalk.green(
-  'https://raastastic.io/',
+Run 'node-raas ubirr' or visit ${chalk.green(
+  'https://ubirrsoft.com/',
 )} to learn more.`;
 
 export const extendedUpgradeSuggestion = `${upgradeSuggestion}
 
 ${chalk.green(
-  'RaasTastic',
-)} is currently in development and is being built on top of our node-raas CLI to
-provide advanced functionality through the ${chalk.green(
-  'RaasTastic',
-)} CLI and ${chalk.green('RaasTastic')} REST API Server.
+  'Ubirr',
+)} provides advanced functionality such as detailed loggin and easily configurable options.
 
-Below are some (but not all) of the ${chalk.green(
-  'RaasTastic',
-)} planned features.
-
-${chalk.green('RaasTastic')} CLI:
-* Retrive long running repots
-* Execute advanced reports using parameters
-* Export decoded stream to JSON / CSV
-* ${chalk.green('RaasTastic')} Docker image
-* JSON-fromatted logs
-* Increased security via credential splitting
-* ... and more!
-
-${chalk.green('RaasTastic')} REST API Server:
-* Interact with Reports as a Service through an easy and intuitive REST API
-* Implicit restriction to allowed reports
-* Report data stored in-memory only through redis
-* Upon retrievel, reports are purged from memory
-* Configure report expiration - purges the report data if not retrieved within the specified timeframe
-* ... and more!
-
-Stay up to date with the development progress and register for the upcoming
-private Beta for early adopters by visiting ${chalk.green(
-  'RaasTastic',
-)} https://raastastic.io/updates.
+${chalk.green('Ubirr')} provides:
+* Retrieve long-running reports
+* UTF-8 encoded files in XML, CSV, or JSON
+* Easily configure more reports by modifying a text file - no code updates required
+* Automate an UNLIMITED number of reports!
+* Detailed logging
+* US-CORRELATION-ID for additional debugging support
+* Built using NodeJS and TypeScript
+* Runs in Docker
 `;
 
 export const biDataServiceErrors = [
@@ -66,7 +47,7 @@ export const biDataServiceErrors = [
   {
     message: 'There was a problem with the authentication process',
     suggestions:
-      'Confirm that you are pssing in the correct Customer API Key and Base Endpoint URL. Run node-raas pull --help for information on how to obtain/verify the Customer API Key. ',
+      'Confirm that you are passing in the correct Customer API Key and Base Endpoint URL. Run node-raas pull --help for information on how to obtain/verify the Customer API Key. ',
   },
   {
     message:
@@ -132,7 +113,7 @@ ${upgradeSuggestion}`,
 export function handleBiDataServiceErrors(
   obj: any,
   errorNode: string,
-  verbose: boolean = false,
+  verbose = false,
 ): void {
   let identifiedError: {message: string; suggestions: string}[] = [];
 
@@ -184,7 +165,7 @@ ${chalk.yellow(identifiedError[0].suggestions)}`)
 
 export function handleBiStreamingServiceErrors(
   obj: RaasRetrieveReportCallResult,
-  verbose: boolean = false,
+  verbose = false,
 ): void {
   let identifiedError: {message: string; suggestions: string}[] = [];
 
